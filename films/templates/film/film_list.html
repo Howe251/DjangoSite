@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block css %}<link href="{% static 'mult/css/list.css' %}" rel="stylesheet" type="text/css" />{% endblock %}
+{% block title %}Список фильмов{% endblock %}
+
+{% block films %}
+    <div class="container">
+    {% for a in films_lt %}
+        {% if a.isShown %}
+            {% if a.mult %}
+                <a class="im_link" href="{% url 'mult:detail' a.id%}">
+            {% else %}
+                <a class="im_link" href="{% url 'mult:detailfilm' a.id%}">
+            {% endif %}
+                {% if a.img|length > 5 %}
+                <img class="poster" src="{{a.img.url}}"/>
+                {% else %}
+                <img class="poster" src="{% static 'mult/image/default.jpg' %}"/>
+                {% endif %}
+                <p class="title">{{a.name}}</p>
+            </a>
+        {% endif %}
+    {% endfor %}
+    </div>
+{% endblock films %}

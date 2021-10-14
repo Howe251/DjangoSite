@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% block css %} {% endblock %}
+    {% block js %} {% endblock %}
+    <link href="{% static 'mult/css/base.css' %}" rel="stylesheet" type="text/css" />
+
+    <meta charset="UTF-8">
+    <title>{% block title %}Мой сайт{% endblock %}</title>
+</head>
+<body>
+    <header class="head">
+            <a class="logo_text" href="{% url 'mult:glavnaya' %}">Домашняя библиотека</a>
+            <a class="logo_text" href="{% url 'mult:mult' %}">Мультфильмы</a>
+            <a class="logo_text" href="{% url 'mult:film' %}">Фильмы</a>
+            <div class="search_box">
+                <form action="{% url 'mult:search' %}" method="get">
+                    <input name="q" type="text" placeholder="Поиск...">
+                    <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </form>
+            </div>
+    </header>
+
+    {% block mults %}{% endblock mults %}
+    {% block films %}{% endblock films %}
+
+</body>
+</html>

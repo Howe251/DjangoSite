@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}<link href="{% static '404/css/index.css' %}" rel="stylesheet" type="text/css" />{% endblock %}
+{% block mults %}
+<div class="error">
+    <h1>404 Page Not Found</h1>
+    <p>В этот раз силы зла победили!</p>
+</div>
+{% endblock %}

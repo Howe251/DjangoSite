@@ -1,0 +1,33 @@
+p {
+    text-align: center
+}
+
+.chose {
+    padding-left: 8px;
+    padding-top: 8px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+    grid-template-rows: repeat(2, auto-fit);
+    text-align: center;
+}
+
+.logo {
+    height: 300px;
+    border: none;
+    border-radius: 30px;
+}
+
+.poster {
+    text-decoration: none;
+    transition: opacity 0.3s
+}
+
+.poster:hover {
+    opacity: 0.5;
+}
+.text {
+    margin:0;
+    text-decoration: none;
+    color: #000;
+}

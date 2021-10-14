@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}<link href="{% static 'mult/css/main.css' %}" rel="stylesheet" type="text/css" />{% endblock %}
+{% block title %}Домашняя библиотека{% endblock %}
+
+{% block mults %}
+<p>Выберите что хотите смотреть</p>
+    <div class="chose">
+        <div>
+            <a class="poster" href="/mults">
+                <img class="logo" src="{% static 'mult/image/multback.jpg' %}">
+                <p class="text">Мультфильмы</p>
+            </a>
+        </div>
+        <div>
+            <a class="poster" href="/films">
+                <img class="logo" src="{% static 'mult/image/filmsback.jpg' %}">
+                <p class="text">Фильмы</p>
+            </a>
+        </div>
+    </div>
+{% endblock mults %}

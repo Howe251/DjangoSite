@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %}<link href="{% static 'mult/css/detail.css' %}" rel="stylesheet" type="text/css" />{% endblock %}
+{% block js %}<script type="text/javascript" src="{% static 'mult/js/mult_detail.js' %}"></script>{% endblock %}
+{% block title %}{{mult.name}}{% endblock %}
+
+{% block mults %}
+<div class="info_block">
+    <h2>{{mult.name}}</h2>
+    <div class="box">
+        <div class="image">
+            {% if mult.img|length > 5 %}
+            <img src="{{mult.img.url}}">
+            {% else %}
+            <img src="{% static 'mult/image/default.jpg' %}"/>
+            {% endif %}
+        </div>
+        <div class="info">
+            <h2>Информация</h2>
+            <p>Количество эпизодов: {{mult.episodes}}</p>
+            <p>Статус: {{mult.status}}</p>
+            <h2>Описание</h2>
+            <p>{{mult.description}}</p>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="series">
+{% if series_list %}
+    {% for c in series_list %}
+        <strong>{{c.name_serie}}</strong>
+        <a href="{% static 'filmy/Мультики/'%}{{c.href}}">Скачать</a>
+        <p>{{c.full_name}}</p>
+    {% if subs %}
+    <div class="container">
+    <ul>
+        <li class="dropdown"><a href="#" data-toggle="dropdown">Субтитры<i class="icon-arrow"></i></a>
+            <ul class="dropdown-menu hide">
+            {% for sub in subs %}
+            {% if c.id == sub.name_id %}
+                <li>
+                    <a href="{% static 'filmy/Мультики/'%}{{mult.unformated_name}}{{sub.href}}" type="application/ass">{{sub.autor}} {{sub.name_sub}}</a>
+                </li>
+            {% endif %}
+            {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    </div>
+    {% endif %}
+    {% if sounds %}
+    <div class="container">
+    <ul>
+        <li class="dropdown"><a href="#" data-toggle="dropdown">Озвучка<i class="icon-arrow"></i></a>
+            <ul class="dropdown-menu hide">
+            {% for audio in sounds %}
+            {% if c.id == audio.name_id %}
+            <li>
+                <a href="{% static 'filmy/Мультики/'%}{{audio.href}}" type="application/mka">{{audio.autor}} {{audio.name_audio}}</a>
+            </li>
+            {% endif %}
+        {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    </div>
+    {% endif %}
+    {% endfor %}
+{% else %}
+Серии не найдены
+{% endif %}
+</div>
+<hr>
+
+{% endblock mults %}

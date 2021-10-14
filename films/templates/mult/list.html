@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% block js %}
+    <script type="text/javascript" src="{% static 'mult/js/jquery.js' %}"></script>
+    <script type="text/javascript" src="{% static 'mult/js/mult_list.js' %}"></script>
+{% endblock %}
+{% block css %}<link href="{% static 'mult/css/list.css' %}" rel="stylesheet" type="text/css" />{% endblock %}
+
+{% block title %}Мультфильмы{% endblock %}
+
+{% block mults %}
+
+    {% if mults_lt.object_list %}
+            <div class="container">
+        {% for a in mults_lt.object_list %}
+            {% if a.isShown %}
+                    <a class="im_link" href="{% url 'mult:detail' a.id %}">
+                        {% if a.img|length > 5 %}
+                        <img class="poster" src="{{a.img.url}}"/>
+                        {% else %}
+                        <img class="poster" src="{% static 'mult/image/default.jpg' %}"/>
+                        {% endif %}
+                        <p class="title">{{a.name}}</p>
+                    </a>
+            {% endif %}
+        {% endfor %}
+            </div>
+    {% else %}
+        Библиотека пуста
+    {% endif %}
+{% if is_paginated %}
+<div class="bottom">
+<nav aria-label="...">
+    <ul class="pages">
+        <li class="page-item {% if not prev_url %} disabled {% endif %}">
+            <a href="?{{ prev_url }}" class="{% if not prev_url %}disabled{% endif %}">Предыдущая</a>
+        </li>
+    {% for n in mults_lt.paginator.page_range %}
+        {% if mults_lt.number == n %}
+        <li class="page-item active">
+            <a class="active" href="?p={{ n }}">{{ n }}</a>
+        </li>
+        {% elif n > mults_lt.number|add:-3 and n < mults_lt.number|add:3 %}
+        <li class="page-item">
+            <a href="?p={{ n }}">{{ n }}</a>
+        </li>
+        {% endif %}
+    {% endfor %}
+        <li class="page-item">
+            <a href="?{{ next_url }}" class="{% if not next_url %}disabled{% endif %}">Следующая</a>
+        </li>
+    </ul>
+</nav>
+</div>
+{% endif %}
+{% endblock mults %}
