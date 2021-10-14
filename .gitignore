@@ -1,3 +1,4 @@
-/films_env/
 /films/secrets.py
 /films2_env/
+/access.log
+/error.log
