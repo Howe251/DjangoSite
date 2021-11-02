@@ -7,16 +7,17 @@ from urllib.parse import urlparse
 
 class Film(models.Model):
     name = models.TextField('Название фильма', default="Название")
-    country = models.CharField('Страна', max_length=50, default="США")
+    country = models.CharField('Страна', max_length=150, default="США")
     seasons = models.CharField('Количество сезонов', max_length=50, default="1")
     filmtype = models.CharField('Тип', max_length=20, default="Фильм")
     year = models.CharField('Год выпуска', max_length=10, default="2020")
     description = models.TextField('Описаное', default="НЕТУ")
-    img = models.ImageField(upload_to="images/films", default="https://kalitva-posuda.ru/upload/iblock/a3a/2.jpg", blank=True)
+    img = models.ImageField(upload_to="images/films", default="https://kalitva-posuda.ru/upload/iblock/a3a/2.jpg", blank=True, null=True)
     img_url = models.TextField('ссылка на исходную картинку')
     unformated_name = models.TextField("Имя папки", default=name)
     mult = models.BooleanField("Является ли мультиком", default=False)
     isShown = models.BooleanField("Показывать ли на странице", default=True)
+    create_date = models.DateTimeField("Дата создания", auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -48,11 +49,12 @@ class Mult(models.Model):
     status = models.TextField('Вышло или нет')
     description = models.TextField('Описаное')
     img_url = models.TextField('Картинка')
-    img = models.ImageField(upload_to="images/mults", default="https://kalitva-posuda.ru/upload/iblock/a3a/2.jpg", blank=True)
+    img = models.ImageField(upload_to="images/mults", default="https://kalitva-posuda.ru/upload/iblock/a3a/2.jpg", blank=True, null=True)
     genre = models.TextField("Жанры", default='Экшен')
     unformated_name = models.TextField("Имя папки")
     mult = models.BooleanField("Является ли мультиком", default=True)
     isShown = models.BooleanField("Показывать ли на странице", default=True)
+    create_date = models.DateTimeField("Дата создания", auto_now_add=True)
 
 
     def __str__(self):

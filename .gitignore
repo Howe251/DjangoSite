@@ -2,3 +2,6 @@
 /films2_env/
 /access.log
 /error.log
+/films/apps/mult/migrations/
+/media/images/mults/
+/media/images/films/

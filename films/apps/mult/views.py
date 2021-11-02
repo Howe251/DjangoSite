@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from itertools import chain
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
+from .forms import SortForm
 
 
 h = {
@@ -65,7 +66,23 @@ def search(request):
 
 
 def mult_list(request):
-    mults_lt = Mult.objects.order_by('name')
+    mults_lt = Mult.objects.all()
+    ordering = request.GET.get('ordering')
+    form = SortForm(request.POST, initial={"ordering": ["-name", "По убыванию"]})
+    if form.is_valid() or ordering:
+        if form.cleaned_data["ordering"]:
+            ordering = form.cleaned_data["ordering"]
+            mults_lt = mults_lt.order_by(form.cleaned_data["ordering"])
+        elif ordering:
+            if ordering in [choice[0] for choice in form.base_fields['ordering'].choices]:
+                mults_lt = mults_lt.order_by(ordering)
+            else:
+                raise Http404("Неправильные параметры сортировки")
+    formP = form.as_p()
+    if ordering:
+        if "selected" not in formP:
+            formP = formP[0:formP.find(ordering) + len(ordering) + 1] + " selected" + formP[formP.find(ordering) +
+            len(ordering) + 1::]
     for mult in mults_lt:
         if mult.img_url != "None" and mult.isShown:
             if mult.img_url and not mult.img:
@@ -96,12 +113,12 @@ def mult_list(request):
 
     is_paginated = page.has_other_pages()
     if page.has_previous():
-        prev_url = f"p={page.previous_page_number()}"
+        prev_url = f"p={page.previous_page_number()}&ordering={ordering}" if ordering else f"p={page.previous_page_number()}"
     else:
         prev_url = ""
 
     if page.has_next():
-        next_url = f"p={page.next_page_number()}"
+        next_url = f"p={page.next_page_number()}&ordering={ordering}" if ordering else f"p={page.next_page_number()}"
     else:
         next_url = ""
 
@@ -109,7 +126,9 @@ def mult_list(request):
         'mults_lt': page,
         'is_paginated': is_paginated,
         'prev_url': prev_url,
-        'next_url': next_url
+        'next_url': next_url,
+        'form': formP,
+        'ordering': ordering
     }
     return render(request, 'mult/list.html', context=context)
 

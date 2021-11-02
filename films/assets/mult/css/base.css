@@ -8,6 +8,41 @@ body {
     background-color: #dbd8d8;
 }
 
+.root {
+    overflow: hidden;
+    background: #202736;
+    background: linear-gradient(to bottom, #080a0d 0%, #11151e 80%);
+    background-attachment: fixed;
+    background-size: cover;
+    position: fixed;
+    min-height: 100vh;
+    width: 100%;
+    margin: 0 auto;
+    z-index: 1;
+}
+
+.root:before {
+    content: '';
+    position: fixed;
+    background: url(https://raw.githubusercontent.com/yagoestevez/fcc-portfolio/master/src/Images/Stars.svg?sanitize=true);
+    background-attachment: fixed;
+    width: 100%;
+    min-height: 100vh;
+    z-index: -1;
+    opacity: 0;
+    animation: stars-move-in 1000ms 300ms forwards;
+}
+
+@keyframes stars-move-in {
+    from {
+        background-position-y: -100px;
+    }
+    to {
+        opacity: 1;
+        background-position-y: 0;
+    }
+}
+
 @font-face {
     font-family: FontAwesome; /* Гарнитура шрифта */
     src: url('../font/fontawesome/FontAwesome.otf'); /* Путь к файлу со шрифтом */
