@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block css %}<link href="{% static 'mult/css/main.css' %}" rel="stylesheet" type="text/css" />{% endblock %}
+{% block css %}
+<link href="{% static 'mult/css/'|add:night|add:'/main.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
 {% block title %}Домашняя библиотека{% endblock %}
 
 {% block mults %}
-<p>Выберите что хотите смотреть</p>
+<div class="city"></div>
+<p class="text">Выберите что хотите смотреть</p>
     <div class="chose">
         <div>
             <a class="poster" href="/mults">
