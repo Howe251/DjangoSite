@@ -161,7 +161,7 @@ def FileDelete(path, id):
 def DetailedView(request, mult_id):
     try:
         a = Mult.objects.get(id=mult_id)
-        series_list = Series.objects.filter(name_id=a.id)
+        series_list = Series.objects.filter(name_id=a.id).order_by('full_name')
         subs = Subs.objects.filter(mult_id=a.id)
         sounds = Audio.objects.filter(mult_id=a.id)
         night = get_time()
