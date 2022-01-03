@@ -12,6 +12,7 @@
 <body>
 <div class="root">
     <header class="head">
+            {% block head %} {% endblock %}
             <a class="logo_text" href="{% url 'mult:glavnaya' %}">Домашняя библиотека</a>
             <a class="logo_text" href="{% url 'mult:mult' %}">Мультфильмы</a>
             <a class="logo_text" href="{% url 'mult:film' %}">Фильмы</a>

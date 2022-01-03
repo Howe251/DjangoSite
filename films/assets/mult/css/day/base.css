@@ -46,11 +46,12 @@ body {
   overflow: hidden;
   background-color: #c7c9e3;
   box-shadow: 0px 0px 8px rgba(0,0,0,.6);
+  font-size: 0;
 }
 
 .head a {
   float: left;
-  display: block;
+  display: inline-block;
   color: black;
   text-align: center;
   padding: 14px 16px;
