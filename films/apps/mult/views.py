@@ -10,6 +10,7 @@ from itertools import chain
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
 from .forms import SortForm
+from time import strftime
 
 
 h = {
@@ -27,11 +28,22 @@ h = {
             }
 
 
+def get_time():
+    time = int(strftime("%H"))
+    if time > 20 or 0 <= time < 8:
+        night = "night"
+    else:
+        night = "day"
+    return night
+
+
 def mainpage(request):
-    return render(request, 'main.html')
+    night = get_time()
+    return render(request, 'main.html', {"night": night})
 
 
 def film_list(request):
+    night = get_time()
     films_lt = Film.objects.order_by('name')
     for film in films_lt:
         if film.img_url != "None" and film.isShown:
@@ -44,17 +56,20 @@ def film_list(request):
                 film.img.save(str(film.id)+".jpg", File(img_temp))
                 film.save()
 
-    return render(request, 'film/film_list.html', {'films_lt': films_lt})
+    return render(request, 'film/film_list.html', {'films_lt': films_lt,
+                                                   'night': night})
 
 
 def film_detail(request, film_id):
     try:
         a = Film.objects.get(id=film_id)
         series_list = a.seriesfilms_set.order_by('name_serie')
+        night = get_time()
     except:
         raise Http404("Фильм не найден")
     return render(request, 'film/film_detail.html', {'film': a,
-                                                'series_list': series_list})
+                                                     'series_list': series_list,
+                                                     'night': night})
 
 
 def search(request):
@@ -62,7 +77,9 @@ def search(request):
     mults_lt = Mult.objects.filter(name__icontains=search_querry)
     films_lt = Film.objects.filter(name__icontains=search_querry)
     querysets = list(chain(mults_lt, films_lt))
-    return render(request, 'film/film_list.html', {'films_lt': querysets})
+    night = get_time()
+    return render(request, 'film/film_list.html', {'films_lt': querysets,
+                                                   'night': night})
 
 
 def mult_list(request):
@@ -121,14 +138,15 @@ def mult_list(request):
         next_url = f"p={page.next_page_number()}&ordering={ordering}" if ordering else f"p={page.next_page_number()}"
     else:
         next_url = ""
-
+    night = get_time()
     context = {
         'mults_lt': page,
         'is_paginated': is_paginated,
         'prev_url': prev_url,
         'next_url': next_url,
         'form': formP,
-        'ordering': ordering
+        'ordering': ordering,
+        'night': night
     }
     return render(request, 'mult/list.html', context=context)
 
@@ -143,20 +161,23 @@ def FileDelete(path, id):
 def DetailedView(request, mult_id):
     try:
         a = Mult.objects.get(id=mult_id)
-        #series_list = a.series_set.order_by('name_serie')
-        series_list = Series.objects.filter(name_id=a.id)
+        series_list = Series.objects.filter(name_id=a.id).order_by('full_name')
         subs = Subs.objects.filter(mult_id=a.id)
         sounds = Audio.objects.filter(mult_id=a.id)
+        night = get_time()
     except:
         raise Http404("Фильм не найден")
     return render(request, 'mult/detail.html', {'mult': a,
                                                 'series_list': series_list,
                                                 'subs': subs,
-                                                'sounds': sounds})
+                                                'sounds': sounds,
+                                                'night': night})
 
 
 def page_not_found_view(request, exception):
-    return render(request, '404/index.html')
+    night = get_time()
+    print(exception)
+    return render(request, '404/index.html', {'night': night})
 
 """class DetailedView(View):
     def get(self, request, mult_id):
@@ -166,6 +187,3 @@ def page_not_found_view(request, exception):
             raise Http404("Фильм не найден")
 
         return render(request, 'mult/film_detail.html', {'mult': a})"""
-
-
-

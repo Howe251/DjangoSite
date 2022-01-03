@@ -5,9 +5,28 @@
     <script type="text/javascript" src="{% static 'mult/js/jquery.js' %}"></script>
     <script type="text/javascript" src="{% static 'mult/js/mult_list.js' %}"></script>
 {% endblock %}
-{% block css %}<link href="{% static 'mult/css/list.css' %}" rel="stylesheet" type="text/css" />{% endblock %}
+{% block css %}
+<link href="{% static 'mult/css/'|add:night|add:'/list.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />
+{% endblock %}
 
 {% block title %}Мультфильмы{% endblock %}
+
+{% block head %}
+<div class="menu-wrap">
+  <input type="checkbox" class="toggler">
+  <div class="hamburger"><div></div></div>
+  <div class="side-panel">
+        <div class="side-title">Сортировка:</div>
+        <form method="post" action="">
+            {{ form | safe }}
+            {% csrf_token %}
+            <input type="submit" value="Отсортировать">
+        </form>
+
+  </div>
+</div>
+{% endblock %}
 
 {% block mults %}
 
@@ -29,7 +48,7 @@
     {% else %}
         Библиотека пуста
     {% endif %}
-<input type="checkbox" id="side-checkbox" />
+<!-- <input type="checkbox" id="side-checkbox" />
 <div class="side-panel">
     <label class="close_button" for="side-checkbox">+</label>
     <div class="side-title">Сортировка:</div>
@@ -38,13 +57,7 @@
         {% csrf_token %}
         <input type="submit" value="Отсортировать">
     </form>
-</div>
-<div class="side-button-1-wr">
-    <label class="side-button-1" for="side-checkbox">
-        <div class="side-b side-open">Открыть</div>
-        <div class="side-b side-close">Закрыть</div>
-    </label>
-</div>
+</div> -->
 <!--Bottom Bar -->
 {% if is_paginated %}
 <div class="bottom">

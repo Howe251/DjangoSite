@@ -2,19 +2,26 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    {% block css %} {% endblock %}
+    {% block css %} <link href="{% static 'mult/css/base.css' %}" rel="stylesheet" type="text/css" /> {% endblock %}
     {% block js %} {% endblock %}
-    <link href="{% static 'mult/css/base.css' %}" rel="stylesheet" type="text/css" />
 
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>{% block title %}Домашняя библиотека{% endblock %}</title>
 </head>
 <body>
+<div class="root">
     <header class="head">
+            {% block head %} {% endblock %}
             <a class="logo_text" href="{% url 'mult:glavnaya' %}">Домашняя библиотека</a>
             <a class="logo_text" href="{% url 'mult:mult' %}">Мультфильмы</a>
             <a class="logo_text" href="{% url 'mult:film' %}">Фильмы</a>
             <div class="search_box">
+                <!-- <form action="" method="POST">
+                    <input type="hidden" name="night" value="True">
+                    {% csrf_token %}
+                    <button type="submit"></button>
+                </form> -->
                 <form action="{% url 'mult:search' %}" method="get">
                     <input name="q" type="text" placeholder="Поиск...">
                     <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
@@ -24,6 +31,6 @@
 
     {% block mults %}{% endblock mults %}
     {% block films %}{% endblock films %}
-
+</div>
 </body>
 </html>

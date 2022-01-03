@@ -1,0 +1,74 @@
+
+
+@media screen and (min-width: 979px) {
+  .city {
+    position: absolute;
+    bottom: -300px;
+    left: 0;
+    background: url(../../image/city.svg) bottom left repeat-x;
+    background-size: cover;
+    width: 100%;
+    height: 80%;
+    opacity: 0;
+    animation: city-move-in 1000ms 500ms forwards;
+    border-bottom: 300px solid #181d23;
+  }
+
+  @keyframes city-move-in {
+    from {
+        background-position-y: 150%;
+    }
+    to {
+        opacity: 1;
+        background-position-y: 100%;
+    }
+  }
+}
+
+
+@keyframes stars-move-in {
+    from {
+        background-position-y: -100px;
+    }
+    to {
+        opacity: 1;
+        background-position-y: 0;
+    }
+}
+
+.chose {
+    padding-left: 8px;
+    padding-top: 8px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
+    grid-template-rows: repeat(2, auto-fit);
+    text-align: center;
+}
+
+.logo {
+    width: 60vh;
+    height: 40vh;
+    border: none;
+    border-radius: 30px;
+}
+
+.poster {
+    text-decoration: none;
+    transition: opacity 0.3s
+}
+
+.poster:hover {
+    opacity: 0.5;
+}
+
+.text {
+    padding-top:10px;
+    font: normal normal normal 14px/1 ComicCat;
+    margin:0;
+    text-decoration: none;
+    color: #c4cdd5;
+    text-align: center;
+    font-size: 17px;
+}
+
