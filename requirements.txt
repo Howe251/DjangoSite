@@ -2,11 +2,11 @@ asgiref==3.3.1
 certifi==2020.12.5
 chardet==4.0.0
 Django==3.1.7
+django-admin-list-filter-dropdown==1.0.3
 django-admin-tools==0.9.1
 django-debug-toolbar==3.2
 django-extensions==3.1.1
 idna==2.10
-mysql==0.0.2
 mysqlclient==2.0.3
 Pillow==8.1.2
 pytz==2021.1
