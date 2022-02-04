@@ -83,7 +83,7 @@ def search(request):
 
 
 def mult_list(request):
-    mults_lt = Mult.objects.all()
+    mults_lt = Mult.objects.filter(isShown=True)
     ordering = request.GET.get('ordering')
     form = SortForm(request.POST, initial={"ordering": ["-name", "По убыванию"]})
     if form.is_valid() or ordering:
@@ -179,11 +179,3 @@ def page_not_found_view(request, exception):
     print(exception)
     return render(request, '404/index.html', {'night': night})
 
-"""class DetailedView(View):
-    def get(self, request, mult_id):
-        try:
-            a = Mult.objects.get(id=mult_id)
-        except:
-            raise Http404("Фильм не найден")
-
-        return render(request, 'mult/film_detail.html', {'mult': a})"""

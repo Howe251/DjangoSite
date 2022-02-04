@@ -2,18 +2,29 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from django.urls import path
 from django.http import HttpResponseRedirect
-from .models import Series, Mult, Film, SeriesFilms, Audio
+from django.db import models
+from django.forms import TextInput, Textarea
+from .models import Series, Mult, Film, SeriesFilms, Audio, Subs
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 
-#admin.site.register(Mult)
-admin.site.register(Series)
-admin.site.register(SeriesFilms)
-admin.site.register(Audio)
+
+class FilmSeriesInline(admin.TabularInline):
+    extra = 0
+    model = SeriesFilms
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '20'})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+
 
 @admin.register(Film)
 class FilmID(admin.ModelAdmin):
     change_list_template = "admin/model_change_list.html"
     list_display = ("name", "filmtype", "get_image")
-    list_filter = ('isShown',)
+    list_filter = ('isShown', ('seasons', DropdownFilter), ('year', DropdownFilter))
+    search_fields = ['name', 'description', 'unformated_name', ]
+
+    inlines = [FilmSeriesInline,]
 
     def get_image(self, obj):
         return mark_safe(f'<img src=/media/{obj.img} width="50" height="60">')
@@ -32,13 +43,54 @@ class FilmID(admin.ModelAdmin):
         self.model.objects.all().update(img=None)
         self.message_user(request, "Картинки удалены")
         return HttpResponseRedirect("../")
+
+
+@admin.register(SeriesFilms)
+class SeriesFilmsID(admin.ModelAdmin):
+    list_display = ("name", "name_serie", "full_name")
+    search_fields = ['name', 'name_serie', ]
+
+
+class SeriesInline(admin.TabularInline):
+    extra = 0
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '20'})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+    model = Series
+
+
+class SubsInline(admin.StackedInline):
+    extra = 0
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '20'})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+    model = Subs
+    fields = ("name", ("name_sub", "autor", "href",))
+
+
+class AudioInline(admin.StackedInline):
+    extra = 0
+    model = Audio
+    formfield_overrides = {
+        models.CharField: {'widget': TextInput(attrs={'size': '20'})},
+        models.TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 40})},
+    }
+    fields = ("name", ("name_audio", "autor", "href"))
 
 
 @admin.register(Mult)
 class MultID(admin.ModelAdmin):
     change_list_template = "admin/model_change_list.html"
     list_display = ("name", "episodes", "get_image")
-    list_filter = ('isShown',)
+    list_filter = ('isShown', ('episodes', DropdownFilter))
+    search_fields = ['name', 'description', ]
+    fieldsets = [
+        ('Изменить информацию', {'fields': ['name', 'episodes', 'status', 'description', 'img', 'img_url', 'genre', 'unformated_name',
+                           'isShown', 'mult']}),
+    ]
+    inlines = [SeriesInline, SubsInline, AudioInline]
 
     def get_image(self, obj):
         return mark_safe(f'<img src=/media/{obj.img} width="50" height="60">')
@@ -57,3 +109,19 @@ class MultID(admin.ModelAdmin):
         self.model.objects.all().update(img=None)
         self.message_user(request, "Картинки удалены")
         return HttpResponseRedirect("../")
+
+
+@admin.register(Series)
+class SeriesID(admin.ModelAdmin):
+    list_display = ("name_id", "name", "name_serie", "full_name")
+    search_fields = ['name', 'name_serie', "full_name", ]
+
+
+@admin.register(Subs)
+class SubsID(admin.ModelAdmin):
+    list_display = ("name", "name_sub", "autor", "href")
+
+
+@admin.register(Audio)
+class AudiosID(admin.ModelAdmin):
+    list_display = ("name_audio", "autor", "href", "mult_id")

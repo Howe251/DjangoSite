@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     #'admin_tools.theming',
     #'admin_tools.menu',
     #'admin_tools.dashboard',
+    'django_admin_listfilter_dropdown',
     'mult.apps.MultConfig',
     'django.contrib.admin',
     'django.contrib.auth',

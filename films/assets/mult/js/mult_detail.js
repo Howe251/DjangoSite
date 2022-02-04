@@ -1,8 +1,6 @@
 // Выпадающее меню
 document.addEventListener("DOMContentLoaded", function(){
-console.log("Подключен")
 var dropdown = document.querySelectorAll('.dropdown');
-console.log(dropdown[0])
 var dropdownArray = Array.prototype.slice.call(dropdown,0);
 dropdownArray.forEach(function(el){
 	var button = el.querySelector('a[data-toggle="dropdown"]'),

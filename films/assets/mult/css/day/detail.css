@@ -179,3 +179,16 @@ color: #333;
   -o-transition: max-height 0.1s ease-out;
   transition: max-height 0.1s ease-out;
 }
+
+.to_admin {
+  position: absolute;
+  right: 0;
+  color: black;
+  text-decoration: none;
+  user-select: none;
+  background: #fff;
+  padding: .7em 1.5em;
+  outline: none;
+}
+.to_admin:hover { background: #2c89c6; }
+.to_admin:active { background: #205c84; }
