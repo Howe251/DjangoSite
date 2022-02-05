@@ -20,6 +20,7 @@ class FilmSeriesInline(admin.TabularInline):
 @admin.register(Film)
 class FilmID(admin.ModelAdmin):
     change_list_template = "admin/model_change_list.html"
+    change_form_template = "admin/model_change_form.html"
     list_display = ("name", "filmtype", "get_image")
     list_filter = ('isShown', ('seasons', DropdownFilter), ('year', DropdownFilter))
     search_fields = ['name', 'description', 'unformated_name', ]
@@ -60,7 +61,7 @@ class SeriesInline(admin.TabularInline):
     model = Series
 
 
-class SubsInline(admin.StackedInline):
+class SubsInline(admin.TabularInline):
     extra = 0
     formfield_overrides = {
         models.CharField: {'widget': TextInput(attrs={'size': '20'})},
@@ -70,7 +71,7 @@ class SubsInline(admin.StackedInline):
     fields = ("name", ("name_sub", "autor", "href",))
 
 
-class AudioInline(admin.StackedInline):
+class AudioInline(admin.TabularInline):
     extra = 0
     model = Audio
     formfield_overrides = {
@@ -83,6 +84,7 @@ class AudioInline(admin.StackedInline):
 @admin.register(Mult)
 class MultID(admin.ModelAdmin):
     change_list_template = "admin/model_change_list.html"
+    change_form_template = "admin/model_change_form.html"
     list_display = ("name", "episodes", "get_image")
     list_filter = ('isShown', ('episodes', DropdownFilter))
     search_fields = ['name', 'description', ]

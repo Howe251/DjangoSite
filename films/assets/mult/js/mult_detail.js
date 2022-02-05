@@ -1,4 +1,3 @@
-// Выпадающее меню
 document.addEventListener("DOMContentLoaded", function(){
 var dropdown = document.querySelectorAll('.dropdown');
 var dropdownArray = Array.prototype.slice.call(dropdown,0);
