@@ -76,7 +76,9 @@ def search(request):
     search_querry = request.GET.get('q', '')
     mults_lt = Mult.objects.filter(name__icontains=search_querry)
     films_lt = Film.objects.filter(name__icontains=search_querry)
-    querysets = list(chain(mults_lt, films_lt))
+    mult_genre_lt = Mult.objects.filter(genre__name=search_querry)
+    film_genre_lt = Film.objects.filter(genre__name=search_querry)
+    querysets = list(chain(mults_lt, films_lt, mult_genre_lt, film_genre_lt))
     night = get_time()
     return render(request, 'film/film_list.html', {'films_lt': querysets,
                                                    'night': night})

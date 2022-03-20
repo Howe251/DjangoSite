@@ -192,3 +192,8 @@ color: #333;
 }
 .to_admin:hover { background: #2c89c6; }
 .to_admin:active { background: #205c84; }
+
+a {
+  text-decoration: none;
+  color: #120064;
+}

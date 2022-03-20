@@ -25,6 +25,7 @@
             <h2>Информация</h2>
             <p>Количество эпизодов: {{mult.episodes}}</p>
             <p>Статус: {{mult.status}}</p>
+            <p>Жанры: {% for genre in mult.genre.all %} <a href="{% url 'mult:search' %}?q={{genre}}">{{ genre }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             <h2>Описание</h2>
             <p>{{mult.description}}</p>
         </div>
