@@ -4,8 +4,11 @@ from django.urls import path
 from django.http import HttpResponseRedirect
 from django.db import models
 from django.forms import TextInput, Textarea
-from .models import Series, Mult, Film, SeriesFilms, Audio, Subs
+from .models import Series, Mult, Film, SeriesFilms, Audio, Subs, Genre
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
+
+
+admin.site.register(Genre)
 
 
 class FilmSeriesInline(admin.TabularInline):
@@ -22,7 +25,7 @@ class FilmID(admin.ModelAdmin):
     change_list_template = "admin/model_change_list.html"
     change_form_template = "admin/model_change_form.html"
     list_display = ("name", "filmtype", "get_image")
-    list_filter = ('isShown', ('seasons', DropdownFilter), ('year', DropdownFilter))
+    list_filter = ('isShown', ('seasons', DropdownFilter), ('year', DropdownFilter), ('genre', RelatedDropdownFilter))
     search_fields = ['name', 'description', 'unformated_name', ]
 
     inlines = [FilmSeriesInline,]
@@ -86,7 +89,7 @@ class MultID(admin.ModelAdmin):
     change_list_template = "admin/model_change_list.html"
     change_form_template = "admin/model_change_form.html"
     list_display = ("name", "episodes", "get_image")
-    list_filter = ('isShown', ('episodes', DropdownFilter))
+    list_filter = ('isShown', ('episodes', DropdownFilter), ('genre', RelatedDropdownFilter))
     search_fields = ['name', 'description', ]
     fieldsets = [
         ('Изменить информацию', {'fields': ['name', 'episodes', 'status', 'description', 'img', 'img_url', 'genre', 'unformated_name',

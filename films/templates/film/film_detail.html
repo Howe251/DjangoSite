@@ -26,6 +26,7 @@
             <p>Страна: {{film.country}}</p>
             <p>Тип: {{film.filmtype}}</p>
             <p>Год: {{film.year}}</p>
+            <p>Жанры: {% for genre in film.genre.all %} <a href="{% url 'mult:search' %}?q={{genre}}">{{ genre }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             <h2>Описание</h2>
             <p>{{film.description}}</p>
         </div>
