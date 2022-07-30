@@ -4,9 +4,12 @@
 <link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />
 <link href="{% static '404/css/index.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static '404/js/cursor.js' %}"></script>
+{% endblock %}
 {% block mults %}
 <div class="error">
-    <h1>404 Page Not Found</h1>
+    <h1>{{error}}</h1>
     <p>В этот раз силы зла победили!</p>
 </div>
 {% endblock %}

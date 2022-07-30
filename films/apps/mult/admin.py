@@ -110,7 +110,6 @@ class MultID(admin.ModelAdmin):
         return my_urls + urls
 
     def delete_img(self, request):
-        print("Del")
         self.model.objects.all().update(img=None)
         self.message_user(request, "Картинки удалены")
         return HttpResponseRedirect("../")
