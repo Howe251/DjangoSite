@@ -4,9 +4,16 @@
 <link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />
 <link href="{% static '404/css/index.css' %}" rel="stylesheet" type="text/css" />
 {% endblock %}
+{% block js %}
+<script type="text/javascript" src="{% static '404/js/cursor.js' %}"></script>
+{% endblock %}
 {% block mults %}
-<div class="error">
-    <h1>404 Page Not Found</h1>
-    <p>В этот раз силы зла победили!</p>
+<div class="element">
+  <svg viewBox="0 0 2858 1699">
+    <image xlink:href="{% static '404/img/Library.png' %}" width="100%"/>
+    <foreignObject x="854.531" y="510.793" width="287" height="184">
+      <div class="comicText errorText">{{error}}</div>
+    </foreignObject>
+  </svg>
 </div>
 {% endblock %}

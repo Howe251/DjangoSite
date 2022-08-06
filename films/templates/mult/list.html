@@ -17,20 +17,17 @@
   <input type="checkbox" class="toggler">
   <div class="hamburger"><div></div></div>
   <div class="side-panel">
-        <div class="side-title">Сортировка:</div>
+        <div class="side-title">Сортировка и фильтр:</div>
         <form method="post" action="">
-            {{ form | safe }}
+            {{ formP | safe }}
             {% csrf_token %}
-            <input type="submit" value="Отсортировать">
+            <input type="submit" value="Применить">
         </form>
-
   </div>
 </div>
 {% endblock %}
 
 {% block mults %}
-
-    {% if mults_lt.object_list %}
             <div class="container">
         {% for a in mults_lt.object_list %}
                 <a class="im_link" href="{% url 'mult:detail' a.id %}">
@@ -39,13 +36,10 @@
                     {% else %}
                     <img class="poster" src="{% static 'mult/image/default.jpg' %}"/>
                     {% endif %}
-                    <p class="title">{{a.name}}</p>
+                    <p class="title comicText">{{a.name}}</p>
                 </a>
         {% endfor %}
             </div>
-    {% else %}
-        Библиотека пуста
-    {% endif %}
 {% if is_paginated %}
 <div class="bottom">
 <nav aria-label="...">
@@ -56,11 +50,11 @@
     {% for n in mults_lt.paginator.page_range %}
         {% if mults_lt.number == n %}
         <li class="page-item active">
-            <a class="active" href="?p={{ n }}{% if ordering %}&ordering={{ordering}} {% endif %}">{{ n }}</a>
+            <a class="active" href="#">{{ n }}</a>
         </li>
         {% elif n > mults_lt.number|add:-3 and n < mults_lt.number|add:3 %}
         <li class="page-item">
-            <a href="?p={{ n }}{% if ordering %}&ordering={{ordering}} {% endif %}">{{ n }}</a>
+            <a href="?p={{ n }}{% if ordering.ordering %}&ordering={{ordering.ordering}}{% endif %}{% if ordering.genre %}&genre={{ordering.genre}}{% endif %}">{{ n }}</a>
         </li>
         {% endif %}
     {% endfor %}
