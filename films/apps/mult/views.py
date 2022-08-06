@@ -12,8 +12,6 @@ from django.core.files.temp import NamedTemporaryFile
 from .forms import ListForm
 from time import strftime
 
-from django.conf import settings
-
 h = {
                 "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
                 "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
@@ -43,11 +41,19 @@ def mainpage(request):
     return render(request, 'main.html', {"night": night})
 
 
+def mult_error(id):
+    error_text = ["Попросила Спайка найти, но ничего  не нашлось",
+                  "К сожалению библиотека пуста",
+                  "Неправильные параметры сортировки",
+                  "В нашей библиотеке такого нет"]
+    return {"mult_error": f"{error_text[id]}"}
+
+
 def film_list(request):
     night = get_time()
     films_lt = Film.objects.filter(isShown=True).order_by('name')
     if not films_lt:
-        raise Http404({"mult_error": "Библиотека пуста"})
+        raise Http404(mult_error(1))
     for film in films_lt:
         if film.img_url != "None" and film.isShown:
             if (film.img_url and film.img_url != "Нет данных") and not film.img:
@@ -69,7 +75,7 @@ def film_detail(request, film_id):
         series_list = a.seriesfilms_set.order_by('name_serie')
         night = get_time()
     except:
-        raise Http404({"mult_error": "Фильм не найден"})
+        raise Http404(mult_error(3))
     return render(request, 'film/film_detail.html', {'film': a,
                                                      'series_list': series_list,
                                                      'night': night})
@@ -84,7 +90,7 @@ def search(request):
     querysets = list(chain(mults_lt, films_lt, mult_genre_lt, film_genre_lt))
     night = get_time()
     if not querysets:
-        raise Http404({"mult_error": 'Ничего не найдено'})
+        raise Http404(mult_error(0))
     return render(request, 'film/film_list.html', {'films_lt': querysets,
                                                    'night': night})
 
@@ -92,7 +98,7 @@ def search(request):
 def mult_list(request):
     mults_lt = Mult.objects.filter(isShown=True)
     if not mults_lt:
-        raise Http404({"mult_error": "Библиотека пуста"})
+        raise Http404(mult_error(1))
     forms = {'ordering': request.GET.get('ordering'), 'genre': request.GET.get('genre')}
     form = ListForm(request.POST)
     formP = form.as_p()
@@ -113,14 +119,14 @@ def mult_list(request):
                             len(f'''value="{forms['genre']}"''')] + " selected" + \
                             formP[formP.rfind(f'''value="{forms['genre']}"''') + len(f'''value="{forms['genre']}"''')::]
             else:
-                raise Http404({"mult_error": "Неправильные параметры сортировки"})
+                raise Http404(mult_error(1))
         if forms['ordering']:
             if forms['ordering'] in [str(choice.data['value']) for choice in form.visible_fields()[0]]:
                 mults_lt = mults_lt.order_by(forms['ordering'])
                 formP = formP[0:formP.find(forms['ordering']) + len(forms['ordering'])+1] + " selected" + \
                         formP[formP.find(forms['ordering']) + len(forms['ordering'])+1::]
             else:
-                raise Http404({"mult_error": "Неправильные параметры сортировки"})
+                raise Http404(mult_error(1))
 
     for mult in mults_lt:
         if mult.img_url != "None" and mult.isShown:
@@ -192,7 +198,7 @@ def DetailedView(request, mult_id):
         sounds = Audio.objects.filter(mult_id=a.id)
         night = get_time()
     except:
-        raise Http404({"mult_error": "Фильм не найден"})
+        raise Http404(mult_error(3))
     return render(request, 'mult/detail.html', {'mult': a,
                                                 'series_list': series_list,
                                                 'subs': subs,
@@ -204,6 +210,4 @@ def page_not_found_view(request, exception):
     night = get_time()
     if "mult_error" in exception.args[0]:
         return render(request, '404/index.html', {'night': night, 'error': exception.args[0]['mult_error']})
-    else:
-        return render(request, '404/index.html', {'night': night, 'error': "404 Page Not Found"})
-    # Разделить картинку на слои. Сделать движение за курсором(мб). Текст ошибки писать в выноске
+    return render(request, '404/index.html', {'night': night, 'error': mult_error(3)['mult_error']})
