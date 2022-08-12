@@ -13,7 +13,7 @@
 .container img {
     border-radius: 4px;
     width: 225px;
-    height: 320px;
+    height: 300px;
     object-fit: cover;
 }
 
@@ -60,11 +60,25 @@ ul.pages {
 ul.pages li {display: inline;}
 
 ul.pages li a {
+    font-size: 17px;
     color: black;
     float: left;
     padding: 8px 16px;
     text-decoration: none;
     border-radius: 5px;
+}
+.mobilePage {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+ .mobilePage {
+    display: block;
+ }
+
+ .pcPage {
+    display: none;
+ }
 }
 
 ul.pages li a.active {

@@ -45,7 +45,8 @@
 <nav aria-label="...">
     <ul class="pages">
         <li class="page-item {% if not prev_url %} disabled {% endif %}">
-            <a href="?{{ prev_url }}" class="{% if not prev_url %}disabled{% endif %}">Предыдущая</a>
+            <a href="?{{ prev_url }}" class="pcPage {% if not prev_url %}disabled{% endif %}">Предыдущая</a>
+            <a href="?{{ prev_url }}" class="mobilePage {% if not prev_url %}disabled{% endif %}"><</a>
         </li>
     {% for n in mults_lt.paginator.page_range %}
         {% if mults_lt.number == n %}
@@ -59,7 +60,8 @@
         {% endif %}
     {% endfor %}
         <li class="page-item">
-            <a href="?{{ next_url }}" class="{% if not next_url %}disabled{% endif %}">Следующая</a>
+            <a href="?{{ next_url }}" class="pcPage {% if not next_url %}disabled{% endif %}">Следующая</a>
+            <a href="?{{ next_url }}" class="mobilePage {% if not next_url %}disabled{% endif %}">></a>
         </li>
     </ul>
 </nav>
