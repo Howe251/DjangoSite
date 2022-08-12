@@ -71,15 +71,18 @@ ul.pages li a {
     border-radius: 5px;
 }
 
+.mobilePage {
+    display: none;
+}
+
 @media screen and (max-width: 600px) {
- ul.pages li a {
-    font: normal normal normal 14px/1 ComicCat;
-    font-size: 14px;
-    color: #e3e8ec;
-    float: left;
-    padding: 8px 16px;
-    text-decoration: none;
-    border-radius: 5px;
+
+ .mobilePage {
+    display: block;
+ }
+
+ .pcPage {
+    display: none;
  }
 }
 
