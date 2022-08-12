@@ -6,7 +6,8 @@
 body {
     overflow-y: auto;
     margin: 0;
-    background-color: #dbd8d8;
+    background: #202736;
+    background: linear-gradient(to bottom, #080a0d 0%, #11151e 80%);
 }
 
 @font-face {
@@ -40,8 +41,6 @@ body {
 
 .root {
     overflow-x: hidden;
-    background: #202736;
-    background: linear-gradient(to bottom, #080a0d 0%, #11151e 80%);
     background-attachment: fixed;
     background-size: cover;
     position: relative;
@@ -68,6 +67,9 @@ body {
   }
 }
 
+.txtCl {
+ color: #c4cdd5;
+}
 
 .head {
   overflow: hidden;
@@ -84,7 +86,6 @@ body {
 
 .head a {
   display: inline-block;
-  color: #c4cdd5;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
