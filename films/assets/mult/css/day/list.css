@@ -6,6 +6,8 @@
     grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
     grid-template-rows: repeat(2, auto-fit);
     text-align: center;
+    justify-items: center;
+    align-items: center;
 }
 
 .container img {

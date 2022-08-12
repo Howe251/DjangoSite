@@ -3,17 +3,20 @@ p {
 }
 
 .chose {
-    padding-left: 8px;
     padding-top: 8px;
     display: grid;
     grid-gap: 5px;
     grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
     grid-template-rows: repeat(2, auto-fit);
     text-align: center;
+    justify-items: center;
+    align-items: center;
+    grid-row-gap: 20px;
 }
 
 .logo {
-    height: 300px;
+    height: 20vw;
+    width: 30vw;
     border: none;
     border-radius: 30px;
 }

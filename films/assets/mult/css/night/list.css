@@ -6,13 +6,15 @@
     grid-template-columns: repeat(auto-fit, minmax(225px, 1fr));
     grid-template-rows: repeat(2, auto-fit);
     text-align: center;
+    justify-items: center;
+    align-items: center;
 }
 
 .container img {
     filter: contrast(80%);
     border-radius: 4px;
     width: 225px;
-    height: 320px;
+    height: 300px;
     object-fit: cover;
 }
 
@@ -61,12 +63,24 @@ ul.pages li {display: inline;}
 
 ul.pages li a {
     font: normal normal normal 14px/1 ComicCat;
-    font-size: 20px;
+    font-size: 17px;
     color: #e3e8ec;
     float: left;
     padding: 8px 16px;
     text-decoration: none;
     border-radius: 5px;
+}
+
+@media screen and (max-width: 600px) {
+ ul.pages li a {
+    font: normal normal normal 14px/1 ComicCat;
+    font-size: 14px;
+    color: #e3e8ec;
+    float: left;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 5px;
+ }
 }
 
 ul.pages li a.active {
