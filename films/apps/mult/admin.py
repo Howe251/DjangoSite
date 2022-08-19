@@ -4,6 +4,7 @@ from django.urls import path
 from django.http import HttpResponseRedirect
 from django.db import models
 from django.forms import TextInput, Textarea
+from .forms import AdminUrlForm
 from .models import Series, Mult, Film, SeriesFilms, Audio, Subs, Genre
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 
@@ -22,12 +23,16 @@ class FilmSeriesInline(admin.TabularInline):
 
 @admin.register(Film)
 class FilmID(admin.ModelAdmin):
+    form = AdminUrlForm
     change_list_template = "admin/model_change_list.html"
     change_form_template = "admin/model_change_form.html"
     list_display = ("name", "filmtype", "get_image")
     list_filter = ('isShown', ('seasons', DropdownFilter), ('year', DropdownFilter), ('genre', RelatedDropdownFilter))
     search_fields = ['name', 'description', 'unformated_name', ]
-
+    fieldsets = [
+        ("Изменить информацию", {"fields": ['name', 'country', 'seasons', 'filmtype', 'year', 'description', 'genre',
+                                            'img', 'img_url', 'unformated_name', 'mult', 'isShown', 'kino_url']})
+    ]
     inlines = [FilmSeriesInline,]
 
     def get_image(self, obj):
@@ -86,6 +91,7 @@ class AudioInline(admin.TabularInline):
 
 @admin.register(Mult)
 class MultID(admin.ModelAdmin):
+    form = AdminUrlForm
     change_list_template = "admin/model_change_list.html"
     change_form_template = "admin/model_change_form.html"
     list_display = ("name", "episodes", "get_image")
@@ -93,7 +99,7 @@ class MultID(admin.ModelAdmin):
     search_fields = ['name', 'description', ]
     fieldsets = [
         ('Изменить информацию', {'fields': ['name', 'episodes', 'status', 'description', 'img', 'img_url', 'genre', 'unformated_name',
-                           'isShown', 'mult']}),
+                           'isShown', 'mult', 'kino_url']}),
     ]
     inlines = [SeriesInline, SubsInline, AudioInline]
 

@@ -1,8 +1,4 @@
 from django.db import models
-from django.urls import reverse
-from django.core.files import File
-from os import path
-from urllib.parse import urlparse
 
 
 class Genre(models.Model):
@@ -23,7 +19,7 @@ class Film(models.Model):
     filmtype = models.CharField('Тип', max_length=20, default="Фильм")
     year = models.CharField('Год выпуска', max_length=10, default="2020")
     description = models.TextField('Описаное', default="НЕТУ")
-    genre = models.ManyToManyField(Genre, help_text="Выберите жанр для фильма", verbose_name="Жанр")
+    genre = models.ManyToManyField(Genre, help_text="Выберите жанр для фильма", verbose_name="Жанр", blank=True)
     img = models.ImageField(upload_to="images/films", default="static/mult/image/default.jpg", blank=True, null=True)
     img_url = models.TextField('ссылка на исходную картинку')
     unformated_name = models.TextField("Имя папки", default=name)
@@ -62,7 +58,7 @@ class Mult(models.Model):
     description = models.TextField('Описаное')
     img_url = models.TextField('Картинка')
     img = models.ImageField(upload_to="images/mults", default="static/mult/image/default.jpg", blank=True, null=True)
-    genre = models.ManyToManyField(Genre, help_text="Выберите жанр для мультика", verbose_name="Жанр")
+    genre = models.ManyToManyField(Genre, help_text="Выберите жанр для мультика", verbose_name="Жанр", blank=True)
     unformated_name = models.TextField("Имя папки")
     mult = models.BooleanField("Является ли мультиком", default=True)
     isShown = models.BooleanField("Показывать ли на странице", default=True)
