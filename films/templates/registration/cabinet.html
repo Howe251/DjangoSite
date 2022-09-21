@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block mults %}
+    <p>{{user.username}}, добро пожаловать!!!</p>
+    <p>email: {{user.email}}</p>
+    <a href="{% url 'mult:logout' %}">Выйти</a>
+{% endblock %}

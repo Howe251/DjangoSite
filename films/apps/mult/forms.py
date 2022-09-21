@@ -3,6 +3,8 @@ from .models import Genre, Film
 from .parse import kinopoiskParse, shikimoriParse
 from urllib.parse import urlsplit, urlunsplit
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
+from django.contrib.auth.models import User
 
 
 class ListForm(forms.Form):
@@ -48,3 +50,49 @@ class AdminUrlForm(forms.ModelForm):
             except:
                 raise ValidationError({"kino_url": message})
         return self.cleaned_data
+
+
+class UserLoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+
+    username = UsernameField(label=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Имя пользователя', 'id': 'hello'}))
+    password = forms.CharField(label=False, widget=forms.PasswordInput(
+        attrs={
+            'class': 'form-control',
+            'placeholder': 'Пароль',
+            'id': 'hi',
+        }))
+    error_messages = {
+        'invalid_login': "Неверное имя пользователя или пароль",
+        'inactive': "Этот аккаунт заблокирован",
+    }
+
+
+class UserRegisterForm(UserCreationForm):
+
+    def __init__(self, *args, **kwargs):
+        super(UserRegisterForm, self).__init__(*args, **kwargs)
+
+    username = UsernameField(label=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Имя пользователя'}))
+
+    email = forms.EmailField(label=False, widget=forms.TextInput(
+        attrs={'type': 'email',
+               'placeholder': 'E-mail'}))
+    password1 = forms.CharField(label=False, widget=forms.PasswordInput(
+        attrs={
+            'class': 'pass1',
+            'placeholder': 'Пароль',
+        }))
+
+    password2 = forms.CharField(label=False, widget=forms.PasswordInput(
+        attrs={
+            'class': 'pass1',
+            'placeholder': 'Повторите пароль',
+        }))
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2', )

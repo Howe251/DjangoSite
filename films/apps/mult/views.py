@@ -2,15 +2,20 @@ import os
 
 import requests
 from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.template import RequestContext
 from .models import Mult, Series, Film, Subs, Audio
 from django.core.paginator import Paginator
 from itertools import chain
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
-from .forms import ListForm
-from time import strftime
+from .forms import ListForm, UserLoginForm, UserRegisterForm
+from django.views import View
+from django.contrib import auth, messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.forms import UserCreationForm
+from urllib.parse import urlparse
+from .functions import get_time, mult_error, FileDelete, create_context_username_csrf, get_next_url
 
 h = {
                 "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
@@ -27,26 +32,9 @@ h = {
             }
 
 
-def get_time():
-    time = int(strftime("%H"))
-    if time > 20 or 0 <= time < 8:
-        night = "night"
-    else:
-        night = "day"
-    return night
-
-
 def mainpage(request):
     night = get_time()
     return render(request, 'main.html', {"night": night})
-
-
-def mult_error(id):
-    error_text = ["Попросила Спайка найти, но ничего  не нашлось",
-                  "К сожалению библиотека пуста",
-                  "Неправильные параметры сортировки",
-                  "В нашей библиотеке такого нет"]
-    return {"mult_error": f"{error_text[id]}"}
 
 
 def film_list(request):
@@ -183,13 +171,6 @@ def mult_list(request):
     return render(request, 'mult/list.html', context=context)
 
 
-def FileDelete(path, id):
-    try:
-        os.remove(os.path.join(os.path.abspath(os.curdir), "media/images", path, str(id)+".jpg"))
-    except FileNotFoundError:
-        print()
-
-
 def DetailedView(request, mult_id):
     try:
         a = Mult.objects.get(id=mult_id)
@@ -211,3 +192,57 @@ def page_not_found_view(request, exception):
     if "mult_error" in exception.args[0]:
         return render(request, '404/index.html', {'night': night, 'error': exception.args[0]['mult_error']})
     return render(request, '404/index.html', {'night': night, 'error': mult_error(3)['mult_error']})
+
+
+class LoginView(View):
+    def get(self, request):
+        if auth.get_user(request).is_authenticated:
+            return redirect('/')
+        else:
+            context = create_context_username_csrf(request)
+            context['night'] = get_time()
+            return render(request, 'registration/login.html', context=context)
+
+    def post(self, request):
+        form = UserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            auth.login(request, form.get_user())
+            next = urlparse(get_next_url(request)).path
+            if next == '/admin/login/' and request.user.is_staff:
+                return redirect('/admin/')
+            return redirect(next)
+        for a in form.errors.items():
+            messages.error(request, a[1][0])
+        context = create_context_username_csrf(request)
+        context['night'] = get_time()
+        context['login_form'] = form
+        return render(request, 'registration/login.html', context=context)
+
+
+class CabinetView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        return render(request, 'registration/cabinet.html', {'night': get_time()})
+
+    def post(self, request):
+        return render(request, 'registration/cabinet.html', {'night': get_time()})
+
+
+def create_user(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Пользователь создан. Теперь вы можете войти')
+            return redirect('/login')
+            # return HttpResponse("User created successfully!")
+    else:
+        form = UserRegisterForm()
+        return render(request, 'registration/registration.html', {'form': form, 'night': get_time()})
+
+
+def out(request):
+    auth.logout(request)
+    return redirect('/')

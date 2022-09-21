@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %} <link href="{% static 'registration/login.css' %}" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block js %} <script type="text/javascript" src="{% static 'registration/reg.js' %}"></script> {% endblock %}
+{% block mults %}
+  {% if messages %}
+    <div class="alerts">
+      {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">
+          <p class="comicText">{{ message }}</p>
+          <div class="meter">
+            <span class="bar span-{{ message.tags }}" style="width: 0%"></span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div class="login">
+    <div class="form">
+      <h1 class="comicText">Войти на сайт</h1>
+      <form id="contact_form" action="{% url 'mult:login' %}" method="post">
+        {% csrf_token %}
+        {% for field in login_form.visible_fields %}
+          {{ field }}
+          {{ field.help_text }}
+        {% endfor %}
+        <div class="form-group">
+          <button type="submit">Войти</button>
+          <p class="message comicText">Нет аккаунта? <a href="{% url 'mult:register' %}">Создать</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
