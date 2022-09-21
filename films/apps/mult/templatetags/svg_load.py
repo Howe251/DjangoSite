@@ -3,15 +3,16 @@ import xml.etree.ElementTree as ET
 from django import template
 from django.utils.safestring import mark_safe
 from django.conf import settings
+from os.path import join
 
 register = template.Library()
 
-ICON_DIR = f"{settings.STATIC_ROOT}/mult/image"
+ICON_DIR = join(settings.STATIC_ROOT, "mult", "image")
 
 
 @register.simple_tag
 def icon(file_name, class_str=None, size=24, fill='#000000'):
-    """Inlines a SVG icon from linkcube/src/core/assets/templates/core.assets/icon
+    """Inlines a SVG icon from assets/mult/image
 
     Example usage:
         {% icon 'face' 'std-icon menu-icon' 32 '#ff0000' %}
