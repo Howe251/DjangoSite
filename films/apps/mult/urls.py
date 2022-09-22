@@ -14,6 +14,10 @@ urlpatterns = [
     path("cabinet/", views.CabinetView.as_view(), name='cabinet'),
     path("logout/", views.out, name='logout'),
     path("register/", views.create_user, name='register'),
+    path('mults/<int:pk>/like/', views.AddLike.as_view(), name='like'),
+    path('films/<int:pk>/like/', views.AddLike.as_view(), name='flike'),
+    path('mults/<int:pk>/dislike/', views.AddDislike.as_view(), name='dislike'),
+    path('films/<int:pk>/dislike/', views.AddDislike.as_view(), name='fdislike'),
     # path('accounts/', include('django.contrib.auth.urls')),
 ]
 

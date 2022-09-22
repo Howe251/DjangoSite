@@ -160,3 +160,5 @@ LOGIN_REDIRECT_URL = '/'
 AUTHENTICATION_BACKENDS = [
     'mult.backends.MultAuthBackend',
 ]
+
+AUTH_USER_MODEL = 'mult.User'

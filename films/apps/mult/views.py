@@ -1,8 +1,8 @@
-import os
+import json
 
 import requests
-from django.http import Http404, HttpResponse
-from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, reverse
 from django.template import RequestContext
 from .models import Mult, Series, Film, Subs, Audio
 from django.core.paginator import Paginator
@@ -30,6 +30,80 @@ h = {
                 "Pragma": "no-cache",
                 "Cache-Control": "no-cache"
             }
+
+
+class AddLike(LoginRequiredMixin, View):
+
+    def post(self, request, pk, *args, **kwargs):
+        if "mults" in request.path:
+            post = Mult.objects.get(pk=pk)
+            redir = 'mult:detail'
+        else:
+            post = Film.objects.get(pk=pk)
+            redir = 'mult:detailfilm'
+
+        is_dislike = False
+
+        for dislike in post.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+
+        if is_dislike:
+            post.dislikes.remove(request.user)
+
+        is_like = False
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if not is_like:
+            post.likes.add(request.user)
+
+        if is_like:
+            post.likes.remove(request.user)
+
+        return HttpResponseRedirect(reverse(redir, args=[str(pk)]))
+
+
+class AddDislike(LoginRequiredMixin, View):
+
+    def post(self, request, pk, *args, **kwargs):
+        if "mults" in request.path:
+            post = Mult.objects.get(pk=pk)
+            redir = 'mult:detail'
+        else:
+            post = Film.objects.get(pk=pk)
+            redir = 'mult:detailfilm'
+
+        is_like = False
+
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+
+        if is_like:
+            post.likes.remove(request.user)
+
+
+
+        is_dislike = False
+
+        for dislike in post.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+
+        if not is_dislike:
+            post.dislikes.add(request.user)
+
+        if is_dislike:
+            post.dislikes.remove(request.user)
+
+        return HttpResponseRedirect(reverse(redir, args=[str(pk)]))
 
 
 def mainpage(request):

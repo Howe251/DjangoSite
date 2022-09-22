@@ -1,10 +1,10 @@
 from django import forms
-from .models import Genre, Film
+from .models import Genre, Film, User
 from .parse import kinopoiskParse, shikimoriParse
 from urllib.parse import urlsplit, urlunsplit
 from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 
 class ListForm(forms.Form):

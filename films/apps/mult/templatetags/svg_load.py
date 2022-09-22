@@ -30,7 +30,8 @@ def icon(file_name, class_str=None, size=24, fill='#000000'):
         XML to be inlined, i.e.:
         <svg width="..." height="..." fill="...">...</svg>
     """
-    path = f'{ICON_DIR}/{file_name}.svg'
+    # path = f'{ICON_DIR}/{file_name}.svg'
+    path = join(ICON_DIR, file_name+'.svg')
     ET.register_namespace('', "http://www.w3.org/2000/svg")
     tree = ET.parse(path)
     root = tree.getroot()

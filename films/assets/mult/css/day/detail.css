@@ -197,3 +197,12 @@ a {
   text-decoration: none;
   color: #120064;
 }
+
+.dislike {
+  transform: scale(-1, -1)
+}
+
+.avatar {
+  width: 30px;
+  border-radius: 25px;
+}

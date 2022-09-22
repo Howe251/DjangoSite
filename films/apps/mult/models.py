@@ -1,4 +1,14 @@
 from django.db import models
+# from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
+
+
+class User(AbstractUser):
+    gender = models.BooleanField(verbose_name="пол", default=None, blank=True, null=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+
+    def __str__(self):
+        return self.username
 
 
 class Genre(models.Model):
@@ -26,6 +36,8 @@ class Film(models.Model):
     mult = models.BooleanField("Является ли мультиком", default=False)
     isShown = models.BooleanField("Показывать ли на странице", default=True)
     create_date = models.DateTimeField("Дата создания", auto_now_add=True)
+    likes = models.ManyToManyField(User, blank=True, related_name='film_likes')
+    dislikes = models.ManyToManyField(User, blank=True, related_name='film_dislikes')
 
     def __str__(self):
         return self.name
@@ -63,6 +75,8 @@ class Mult(models.Model):
     mult = models.BooleanField("Является ли мультиком", default=True)
     isShown = models.BooleanField("Показывать ли на странице", default=True)
     create_date = models.DateTimeField("Дата создания", auto_now_add=True)
+    likes = models.ManyToManyField(User, blank=True, related_name='mult_likes')
+    dislikes = models.ManyToManyField(User, blank=True, related_name='mult_dislikes')
 
     def __str__(self):
         return self.name
