@@ -13,12 +13,12 @@ def create_context_username_csrf(request):
 
 
 def get_next_url(request):
-    next = request.META.get('HTTP_REFERER')
-    if next:
-        next = urlunquote(next)  # HTTP_REFERER may be encoded.
-    if not is_safe_url(url=next, allowed_hosts=request.get_host()):
-        next = '/'
-    return next
+    nnext = request.GET.get('next')
+    if nnext:
+        nnext = urlunquote(nnext)  # HTTP_REFERER may be encoded.
+    if not is_safe_url(url=nnext, allowed_hosts=request.get_host()):
+        nnext = '/'
+    return nnext
 
 
 def FileDelete(path, id):

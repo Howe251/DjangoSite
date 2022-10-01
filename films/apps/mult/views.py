@@ -33,6 +33,13 @@ h = {
 
 
 class AddLike(LoginRequiredMixin, View):
+    login_url = "/login/"
+
+    def get(self, request, pk, *args, **kwargs):
+        if 'mults' in request.path:
+            return HttpResponseRedirect(reverse('mult:detail', args=[str(pk)]))
+        else:
+            return HttpResponseRedirect(reverse('mult:detailfilm', args=[str(pk)]))
 
     def post(self, request, pk, *args, **kwargs):
         if "mults" in request.path:
@@ -41,34 +48,33 @@ class AddLike(LoginRequiredMixin, View):
         else:
             post = Film.objects.get(pk=pk)
             redir = 'mult:detailfilm'
-
         is_dislike = False
-
         for dislike in post.dislikes.all():
             if dislike == request.user:
                 is_dislike = True
                 break
-
         if is_dislike:
             post.dislikes.remove(request.user)
-
         is_like = False
-
         for like in post.likes.all():
             if like == request.user:
                 is_like = True
                 break
-
         if not is_like:
             post.likes.add(request.user)
-
         if is_like:
             post.likes.remove(request.user)
-
         return HttpResponseRedirect(reverse(redir, args=[str(pk)]))
 
 
 class AddDislike(LoginRequiredMixin, View):
+    login_url = "/login"
+
+    def get(self, request, pk, *args, **kwargs):
+        if 'mults' in request.path:
+            return HttpResponseRedirect(reverse('mult:detail', args=[str(pk)]))
+        else:
+            return HttpResponseRedirect(reverse('mult:detailfilm', args=[str(pk)]))
 
     def post(self, request, pk, *args, **kwargs):
         if "mults" in request.path:
@@ -77,32 +83,22 @@ class AddDislike(LoginRequiredMixin, View):
         else:
             post = Film.objects.get(pk=pk)
             redir = 'mult:detailfilm'
-
         is_like = False
-
         for like in post.likes.all():
             if like == request.user:
                 is_like = True
                 break
-
         if is_like:
             post.likes.remove(request.user)
-
-
-
         is_dislike = False
-
         for dislike in post.dislikes.all():
             if dislike == request.user:
                 is_dislike = True
                 break
-
         if not is_dislike:
             post.dislikes.add(request.user)
-
         if is_dislike:
             post.dislikes.remove(request.user)
-
         return HttpResponseRedirect(reverse(redir, args=[str(pk)]))
 
 
@@ -136,11 +132,18 @@ def film_detail(request, film_id):
         a = Film.objects.get(id=film_id)
         series_list = a.seriesfilms_set.order_by('name_serie')
         night = get_time()
+        # if request.user.is_authenticated:
+        like = a.likes.filter(pk=request.user.pk).exists()
+        dislike = a.dislikes.filter(pk=request.user.pk).exists()
+        # if like:
+        #     print()
     except:
         raise Http404(mult_error(3))
     return render(request, 'film/film_detail.html', {'film': a,
                                                      'series_list': series_list,
-                                                     'night': night})
+                                                     'night': night,
+                                                     'like': like,
+                                                     'dislike': dislike})
 
 
 def search(request):
@@ -275,16 +278,18 @@ class LoginView(View):
         else:
             context = create_context_username_csrf(request)
             context['night'] = get_time()
+            # nnext =
+            context['next'] = get_next_url(request)
             return render(request, 'registration/login.html', context=context)
 
     def post(self, request):
         form = UserLoginForm(request, data=request.POST)
         if form.is_valid():
             auth.login(request, form.get_user())
-            next = urlparse(get_next_url(request)).path
-            if next == '/admin/login/' and request.user.is_staff:
+            nnext = urlparse(get_next_url(request)).path
+            if nnext == '/admin/login/' and request.user.is_staff:
                 return redirect('/admin/')
-            return redirect(next)
+            return redirect(nnext)
         for a in form.errors.items():
             messages.error(request, a[1][0])
         context = create_context_username_csrf(request)

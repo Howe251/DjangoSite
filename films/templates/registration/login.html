@@ -18,7 +18,7 @@
   <div class="login">
     <div class="form">
       <h1 class="comicText">Войти на сайт</h1>
-      <form id="contact_form" action="{% url 'mult:login' %}" method="post">
+      <form id="contact_form" action="{% url 'mult:login' %}?next={{next}}" method="post">
         {% csrf_token %}
         {% for field in login_form.visible_fields %}
           {{ field }}
