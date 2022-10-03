@@ -31,8 +31,8 @@ def FileDelete(path, id):
 def get_time():
     time = int(strftime("%H"))
     if time > 20 or 0 <= time < 8:
-        return "night"
-    return "day"
+        return True
+    return False
 
 
 def mult_error(id):

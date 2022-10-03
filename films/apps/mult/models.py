@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     gender = models.BooleanField(verbose_name="пол", default=None, blank=True, null=True)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', default="avatars/default_user.png")
 
     def __str__(self):
         return self.username

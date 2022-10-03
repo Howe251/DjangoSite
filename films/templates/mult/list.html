@@ -5,8 +5,13 @@
     <script type="text/javascript" src="{% static 'mult/js/mult_list.js' %}"></script>
 {% endblock %}
 {% block css %}
-<link href="{% static 'mult/css/'|add:night|add:'/list.css' %}" rel="stylesheet" type="text/css" />
-<link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'mult/css/list.css' %}" rel="stylesheet" type="text/css" />
+{% if night %}
+<link href="{% static 'mult/css/night/list.css' %}" rel="stylesheet" type="text/css" />
+{% endif %}
+
+<!--<link href="{% static 'mult/css/base.css' %}" rel="stylesheet" type="text/css" />-->
+<!--<link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />-->
 {% endblock %}
 
 {% block title %}Мультфильмы{% endblock %}

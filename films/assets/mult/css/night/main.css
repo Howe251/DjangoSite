@@ -1,4 +1,4 @@
-
+/* night */
 
 @media screen and (min-width: 979px) {
   .city {
@@ -21,6 +21,22 @@
         opacity: 1;
         background-position-y: 100%;
     }
+  }
+
+  .root {
+      overflow: hidden
+  }
+  .root:before {
+    content: '';
+    position: fixed;
+    background: url(../../image/Stars.svg);
+    background-attachment: fixed;
+    width: 100%;
+    position: fixed;
+    min-height: 100vh;
+    z-index: -1;
+    opacity: 0;
+    animation: stars-move-in 1000ms 300ms forwards;
   }
 }
 
@@ -72,4 +88,3 @@
     text-align: center;
     font-size: 17px;
 }
-

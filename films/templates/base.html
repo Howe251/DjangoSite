@@ -3,7 +3,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'mult/css/base.css' %}" rel="stylesheet" type="text/css" />
+    {% if night %}
+    <link href="{% static 'mult/css/night/base.css' %}" rel="stylesheet" type="text/css" />
+    {% endif %}
     {% block css %} {% endblock %}
     <script type="text/javascript" src="{% static 'mult/js/jquery.js' %}"></script>
     {% block js %} {% endblock %}

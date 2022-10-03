@@ -2,8 +2,10 @@
 
 {% load static %}
 {% block css %}
-<link href="{% static 'mult/css/'|add:night|add:'/list.css' %}" rel="stylesheet" type="text/css" />
-<link href="{% static 'mult/css/'|add:night|add:'/base.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'mult/css/list.css' %}" rel="stylesheet" type="text/css" />
+{% if night %}
+<link href="{% static 'mult/css/night/list.css' %}" rel="stylesheet" type="text/css" />
+{% endif %}
 {% endblock %}
 {% block title %}Список фильмов{% endblock %}
 
