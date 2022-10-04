@@ -132,11 +132,8 @@ def film_detail(request, film_id):
         a = Film.objects.get(id=film_id)
         series_list = a.seriesfilms_set.order_by('name_serie')
         night = get_time()
-        # if request.user.is_authenticated:
         like = a.likes.filter(pk=request.user.pk).exists()
         dislike = a.dislikes.filter(pk=request.user.pk).exists()
-        # if like:
-        #     print()
     except:
         raise Http404(mult_error(3))
     return render(request, 'film/film_detail.html', {'film': a,
@@ -255,13 +252,17 @@ def DetailedView(request, mult_id):
         subs = Subs.objects.filter(mult_id=a.id)
         sounds = Audio.objects.filter(mult_id=a.id)
         night = get_time()
+        like = a.likes.filter(pk=request.user.pk).exists()
+        dislike = a.dislikes.filter(pk=request.user.pk).exists()
     except:
         raise Http404(mult_error(3))
     return render(request, 'mult/detail.html', {'mult': a,
                                                 'series_list': series_list,
                                                 'subs': subs,
                                                 'sounds': sounds,
-                                                'night': night})
+                                                'night': night,
+                                                'like': like,
+                                                'dislike': dislike})
 
 
 def page_not_found_view(request, exception):

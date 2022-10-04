@@ -54,6 +54,7 @@
                   </div>
                 </form>
             </div>
+            <p>Последние лайкнувшие: {% for a in mult.likes.all %}<div class=""><img class="avatar" src="{{a.avatar.url}}" alt="">{{a.username}}</div>{% endfor %}</p>
         </div>
     </div>
 </div>

@@ -22,9 +22,13 @@ a {
 }
 
 .vote g .a {
+  stroke: white;
   stroke-width: 20;
 }
 
+.vote-btns span {
+  color: white;
+}
 
 .liked g .a{
   fill: white;

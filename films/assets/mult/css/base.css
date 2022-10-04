@@ -98,8 +98,16 @@ body {
 
 @media screen and (max-width: 600px) {
   .head .search_box {
+    display: block;
     margin-right: 0;
     float: none;
+  }
+  .search_box a {
+    position: absolute;
+    right: 32px;
+    left: auto;
+    padding: 0 !important;
+    width: 10px !important;
   }
   .head a, .head input[type=text], .head .search_box button {
     float: none;
@@ -111,6 +119,9 @@ body {
   }
   .head input[type=text] {
     border: 1px solid #ccc;
+  }
+  .menu-wrap {
+    position: absolute;
   }
 }
 
