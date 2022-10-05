@@ -3,8 +3,8 @@ from .models import Genre, Film, User
 from .parse import kinopoiskParse, shikimoriParse
 from urllib.parse import urlsplit, urlunsplit
 from django.core.exceptions import ValidationError
-from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm
-# from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm, UsernameField, UserCreationForm, UserChangeForm
+from django.contrib.auth import get_user_model
 
 
 class ListForm(forms.Form):
@@ -96,3 +96,25 @@ class UserRegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2', )
+
+
+class UserChangeInfo(forms.ModelForm):
+    username = UsernameField(label=False, widget=forms.TextInput(
+        attrs={'class': 'form-control', 'placeholder': 'Имя пользователя'}))
+    email = forms.EmailField(label=False, widget=forms.TextInput(
+        attrs={'type': 'email',
+               'placeholder': 'E-mail'}))
+    class Meta:
+        model = get_user_model()
+        fields = ('username', 'email',)
+
+# class UserChangeInfo(UserChangeForm):
+#     username = UsernameField(label=False, widget=forms.TextInput(
+#         attrs={'class': 'form-control', 'placeholder': 'Имя пользователя', 'id': 'hello'}))
+#     email = forms.EmailField(label=False, widget=forms.TextInput(
+#         attrs={'type': 'email',
+#                'placeholder': 'E-mail'}))
+#     # avatar = forms.ImageField(label=False)
+#     class Meta:
+#         model = get_user_model()
+#         fields = ('username', 'email', 'avatar')

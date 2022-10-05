@@ -1,6 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block css %}
+<link href="{% static 'registration/cabinet.css' %}" rel="stylesheet" type="text/css" />
+{% if night %}
+<link href="{% static 'registration/night/cabinet.css' %}" rel="stylesheet" type="text/css" />
+{% endif %}
+{% endblock %}
 {% block mults %}
-    <p>{{user.username}}, добро пожаловать!!!</p>
-    <p>email: {{user.email}}</p>
-    <a href="{% url 'mult:logout' %}">Выйти</a>
+    <div class="cab">
+        <h1>Профиль</h1>
+        <p class="text">{{user.username}}, добро пожаловать!!!</p>
+        <p class="text">email: {{user.email}}</p>
+        <a href="{% url 'mult:logout' %}">Выйти</a>
+        <div class="form">
+            <form id="contact_form" action="" method="post">
+            {% csrf_token %}
+            {% for field in form.visible_fields %}
+              {{ field }}
+              {{ field.help_text }}
+            {% endfor %}
+                <button type="submit">Сохранить</button>
+            </form>
+        </div>
+    </div>
+
 {% endblock %}

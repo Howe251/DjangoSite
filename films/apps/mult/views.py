@@ -9,7 +9,7 @@ from django.core.paginator import Paginator
 from itertools import chain
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
-from .forms import ListForm, UserLoginForm, UserRegisterForm
+from .forms import ListForm, UserLoginForm, UserRegisterForm, UserChangeInfo
 from django.views import View
 from django.contrib import auth, messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -304,10 +304,16 @@ class CabinetView(LoginRequiredMixin, View):
     redirect_field_name = 'next'
 
     def get(self, request):
-        return render(request, 'registration/cabinet.html', {'night': get_time()})
+        form = UserChangeInfo(request.POST)
+        return render(request, 'registration/cabinet.html', {'night': get_time(),
+                                                             'form': form})
 
     def post(self, request):
-        return render(request, 'registration/cabinet.html', {'night': get_time()})
+        form = UserChangeInfo(request.POST)
+        if form.is_valid():
+            pass
+        return render(request, 'registration/cabinet.html', {'night': get_time(),
+                                                             'form': form})
 
 
 def create_user(request):
