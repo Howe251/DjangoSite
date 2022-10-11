@@ -1,16 +1,22 @@
-import os
+import json
 
 import requests
-from django.http import Http404, HttpResponse
-from django.shortcuts import render
+from django.http import Http404, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, reverse
 from django.template import RequestContext
-from .models import Mult, Series, Film, Subs, Audio
+from .models import Mult, Series, Film, Subs, Audio, User
 from django.core.paginator import Paginator
 from itertools import chain
 from django.core.files import File
 from django.core.files.temp import NamedTemporaryFile
-from .forms import ListForm
-from time import strftime
+from .forms import ListForm, UserLoginForm, UserRegisterForm, UserChangeInfo
+from django.views import View
+from django.contrib import auth, messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.forms import UserCreationForm
+from urllib.parse import urlparse
+from .functions import get_time, mult_error, FileDelete, create_context_username_csrf, get_next_url, handle_upload_file
 
 h = {
                 "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
@@ -27,26 +33,79 @@ h = {
             }
 
 
-def get_time():
-    time = int(strftime("%H"))
-    if time > 20 or 0 <= time < 8:
-        night = "night"
-    else:
-        night = "day"
-    return night
+class AddLike(LoginRequiredMixin, View):
+    login_url = "/login/"
+
+    def get(self, request, pk, *args, **kwargs):
+        if 'mults' in request.path:
+            return HttpResponseRedirect(reverse('mult:detail', args=[str(pk)]))
+        else:
+            return HttpResponseRedirect(reverse('mult:detailfilm', args=[str(pk)]))
+
+    def post(self, request, pk, *args, **kwargs):
+        if "mults" in request.path:
+            post = Mult.objects.get(pk=pk)
+            redir = 'mult:detail'
+        else:
+            post = Film.objects.get(pk=pk)
+            redir = 'mult:detailfilm'
+        is_dislike = False
+        for dislike in post.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+        if is_dislike:
+            post.dislikes.remove(request.user)
+        is_like = False
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+        if not is_like:
+            post.likes.add(request.user)
+        if is_like:
+            post.likes.remove(request.user)
+        return HttpResponseRedirect(reverse(redir, args=[str(pk)]))
+
+
+class AddDislike(LoginRequiredMixin, View):
+    login_url = "/login"
+
+    def get(self, request, pk, *args, **kwargs):
+        if 'mults' in request.path:
+            return HttpResponseRedirect(reverse('mult:detail', args=[str(pk)]))
+        else:
+            return HttpResponseRedirect(reverse('mult:detailfilm', args=[str(pk)]))
+
+    def post(self, request, pk, *args, **kwargs):
+        if "mults" in request.path:
+            post = Mult.objects.get(pk=pk)
+            redir = 'mult:detail'
+        else:
+            post = Film.objects.get(pk=pk)
+            redir = 'mult:detailfilm'
+        is_like = False
+        for like in post.likes.all():
+            if like == request.user:
+                is_like = True
+                break
+        if is_like:
+            post.likes.remove(request.user)
+        is_dislike = False
+        for dislike in post.dislikes.all():
+            if dislike == request.user:
+                is_dislike = True
+                break
+        if not is_dislike:
+            post.dislikes.add(request.user)
+        if is_dislike:
+            post.dislikes.remove(request.user)
+        return HttpResponseRedirect(reverse(redir, args=[str(pk)]))
 
 
 def mainpage(request):
     night = get_time()
     return render(request, 'main.html', {"night": night})
-
-
-def mult_error(id):
-    error_text = ["Попросила Спайка найти, но ничего  не нашлось",
-                  "К сожалению библиотека пуста",
-                  "Неправильные параметры сортировки",
-                  "В нашей библиотеке такого нет"]
-    return {"mult_error": f"{error_text[id]}"}
 
 
 def film_list(request):
@@ -74,11 +133,15 @@ def film_detail(request, film_id):
         a = Film.objects.get(id=film_id)
         series_list = a.seriesfilms_set.order_by('name_serie')
         night = get_time()
+        like = a.likes.filter(pk=request.user.pk).exists()
+        dislike = a.dislikes.filter(pk=request.user.pk).exists()
     except:
         raise Http404(mult_error(3))
     return render(request, 'film/film_detail.html', {'film': a,
                                                      'series_list': series_list,
-                                                     'night': night})
+                                                     'night': night,
+                                                     'like': like,
+                                                     'dislike': dislike})
 
 
 def search(request):
@@ -183,13 +246,6 @@ def mult_list(request):
     return render(request, 'mult/list.html', context=context)
 
 
-def FileDelete(path, id):
-    try:
-        os.remove(os.path.join(os.path.abspath(os.curdir), "media/images", path, str(id)+".jpg"))
-    except FileNotFoundError:
-        print()
-
-
 def DetailedView(request, mult_id):
     try:
         a = Mult.objects.get(id=mult_id)
@@ -197,13 +253,17 @@ def DetailedView(request, mult_id):
         subs = Subs.objects.filter(mult_id=a.id)
         sounds = Audio.objects.filter(mult_id=a.id)
         night = get_time()
+        like = a.likes.filter(pk=request.user.pk).exists()
+        dislike = a.dislikes.filter(pk=request.user.pk).exists()
     except:
         raise Http404(mult_error(3))
     return render(request, 'mult/detail.html', {'mult': a,
                                                 'series_list': series_list,
                                                 'subs': subs,
                                                 'sounds': sounds,
-                                                'night': night})
+                                                'night': night,
+                                                'like': like,
+                                                'dislike': dislike})
 
 
 def page_not_found_view(request, exception):
@@ -211,3 +271,101 @@ def page_not_found_view(request, exception):
     if "mult_error" in exception.args[0]:
         return render(request, '404/index.html', {'night': night, 'error': exception.args[0]['mult_error']})
     return render(request, '404/index.html', {'night': night, 'error': mult_error(3)['mult_error']})
+
+
+class LoginView(View):
+    def get(self, request):
+        if auth.get_user(request).is_authenticated:
+            return redirect('/')
+        else:
+            context = create_context_username_csrf(request)
+            context['night'] = get_time()
+            # nnext =
+            context['next'] = get_next_url(request)
+            return render(request, 'registration/login.html', context=context)
+
+    def post(self, request):
+        form = UserLoginForm(request, data=request.POST)
+        if form.is_valid():
+            auth.login(request, form.get_user())
+            nnext = urlparse(get_next_url(request)).path
+            if nnext == '/admin/login/' and request.user.is_staff:
+                return redirect('/admin/')
+            return redirect(nnext)
+        for a in form.errors.items():
+            messages.error(request, a[1][0])
+        context = create_context_username_csrf(request)
+        context['night'] = get_time()
+        context['login_form'] = form
+        return render(request, 'registration/login.html', context=context)
+
+
+class CabinetView(LoginRequiredMixin, View):
+    login_url = '/login/'
+    redirect_field_name = 'next'
+
+    def get(self, request):
+        form = UserChangeInfo(request.POST, request.FILES)
+        likedmults = Mult.objects.filter(likes=request.user.pk)
+        likedfilms = Film.objects.filter(likes=request.user.pk)
+        return render(request, 'registration/cabinet.html', {'night': get_time(),
+                                                             'form': form,
+                                                             'films_lt': list(chain(likedmults, likedfilms))})
+
+    def post(self, request):
+        form = UserChangeInfo(request.POST, request.FILES)
+        likedmults = Mult.objects.filter(likes=request.user.pk)
+        likedfilms = Film.objects.filter(likes=request.user.pk)
+        if form.is_valid():
+            user = request.user
+            if ('avatar' in form.changed_data and request.FILES) or 'deleteAvatar' in form.changed_data:
+                if form.cleaned_data['deleteAvatar']:
+                    user.avatar.delete(save=False)
+                    user.avatar = 'avatars/default_user.png'
+                    user.save()
+                else:
+                    user.avatar = request.FILES['avatar']
+                user.save()
+            if 'username' in form.changed_data:
+                # user = request.user
+                user.username = form.cleaned_data['username']
+                user.save()
+            if 'email' in form.changed_data:
+                # user = request.user
+                user.email = form.cleaned_data['email']
+                user.save()
+            if 'old_password' in form.changed_data:
+                if form.cleaned_data['new_password1'] != form.cleaned_data['new_password2']:
+                    messages.error(request, 'Пароли не совпадают')
+                elif form.cleaned_data['new_password1'] == form.cleaned_data['old_password']:
+                    messages.error(request, 'Нельзя использовать старый пароль')
+                elif not auth.authenticate(request, username=request.user.username, password=form.cleaned_data['old_password']):
+                    messages.error(request, 'Введите правильный пароль')
+                else:
+                    messages.success(request, 'Пароль успешно изменен')
+                    # user = request.user
+                    user.set_password(form.cleaned_data['new_password1'])
+                    user.save()
+                    auth.logout(request)
+                    return redirect('/')
+        return render(request, 'registration/cabinet.html', {'night': get_time(),
+                                                             'form': form,
+                                                             'films_lt': list(chain(likedmults, likedfilms))})
+
+
+def create_user(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Пользователь создан. Теперь вы можете войти')
+            return redirect('/login')
+            # return HttpResponse("User created successfully!")
+    else:
+        form = UserRegisterForm()
+        return render(request, 'registration/registration.html', {'form': form, 'night': get_time()})
+
+
+def out(request):
+    auth.logout(request)
+    return redirect('/')

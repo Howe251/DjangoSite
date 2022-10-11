@@ -197,3 +197,32 @@ a {
   text-decoration: none;
   color: #120064;
 }
+
+.vote-btns {
+  margin-top: 10px;
+  width: 30px;
+  height: 30px;
+  margin-left: 950px;
+  margin-right: 3em;
+  float: right;
+  display: flex !important;
+}
+
+.vote g .a {
+  stroke-width: 20;
+  stroke: black;
+}
+
+.dislike {
+  transform: scale(-1, -1)
+}
+
+.avatar {
+  height: 30px;
+  width: 30px;
+  border-radius: 25px;
+}
+
+.liked g .a{
+  fill: black;
+}

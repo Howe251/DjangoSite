@@ -1,3 +1,4 @@
+/* night */
 * {
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
@@ -5,39 +6,15 @@
 
 body {
     overflow-y: auto;
-    margin: 0;
     background: #202736;
     background: linear-gradient(to bottom, #080a0d 0%, #11151e 80%);
 }
 
-@font-face {
-    font-family: FontAwesome; /* Гарнитура шрифта */
-    src: url('../../font/fontawesome/FontAwesome.otf'); /* Путь к файлу со шрифтом */
-    src: url('../../font/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),
-         url('../../font/fontawesome/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'),
-         url('../../font/fontawesome/fontawesome-webfont.woff2?v=4.7.0') format('woff2'),
-         url('../../font/fontawesome/fontawesome-webfont.woff?v=4.7.0') format('woff'),
-         url('../../font/fontawesome/fontawesome-webfont.ttf?v=4.7.0') format('truetype'),
-         url('../../font/fontawesome/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
-   }
 
 @font-face {
     font-family: ComicCat; /* Гарнитура шрифта */
     src: url('../../font/Comic_CAT.otf'); /* Путь к файлу со шрифтом */
    }
-
-.fa {
-  display: inline-block;
-  font: normal normal normal 14px/1 FontAwesome;
-  font-size: inherit;
-  text-rendering: auto;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.fa-search:before {
-  content: '\f002';
-}
 
 .root {
     overflow-x: hidden;
@@ -49,33 +26,12 @@ body {
     z-index: 1;
 }
 
-@media screen and (min-width: 979px) {
-  .root {
-    overflow: hidden
-  }
-  .root:before {
-        content: '';
-        position: fixed;
-        background: url(../../image/Stars.svg);
-        background-attachment: fixed;
-        width: 100%;
-        position: fixed;
-        min-height: 100vh;
-        z-index: -1;
-        opacity: 0;
-        animation: stars-move-in 1000ms 300ms forwards;
-  }
-}
-
 .txtCl {
  color: #c4cdd5;
 }
 
 .head {
-  overflow: hidden;
-  background-color: #1a1a1ac9;
-  box-shadow: 0px 0px 8px rgba(0,0,0,.6);
-  font-size: 0;
+  background-color: #1a1a1ac9 !important;
 }
 
 .comicText {
@@ -84,65 +40,24 @@ body {
   text-rendering: auto;
 }
 
-.head a {
-  display: inline-block;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  font-size: 17px;
+.head .txtCl {
+  color: #c4cdd5;
 }
 
-.head a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-.head a.active {
+.head .txtCl.active {
   background-color: #2196F3;
   color: white;
 }
 
-.head .search_box {
-  float: right;
-}
-
 .head input[type=text] {
   background: #848484;
-  padding: 6px;
-  margin-top: 8px;
-  font-size: 17px;
-  border: none;
   color: #fff;
 }
 
 .head .search_box button {
-  float: right;
-  padding: 6px 10px;
-  margin-top: 8px;
-  margin-right: 16px;
   background: #424242;
-  font-size: 17px;
-  border: none;
-  cursor: pointer;
 }
 
-.head .search_box button:hover {
-  background: #ccc;
-}
-
-@media screen and (max-width: 600px) {
-  .head .search_box {
-    float: none;
-  }
-  .head a, .head input[type=text], .head .search_box button {
-    float: none;
-    display: block;
-    text-align: left;
-    width: 100%;
-    margin: 0;
-    padding: 14px;
-  }
-  .head input[type=text] {
-    border: 1px solid #ccc;
-  }
+.loginIcon {
+  fill: #aeaaaa;
 }

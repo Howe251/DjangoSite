@@ -5,11 +5,12 @@ from django.http import HttpResponseRedirect
 from django.db import models
 from django.forms import TextInput, Textarea
 from .forms import AdminUrlForm
-from .models import Series, Mult, Film, SeriesFilms, Audio, Subs, Genre
+from .models import Series, Mult, Film, SeriesFilms, Audio, Subs, Genre, User
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter, ChoiceDropdownFilter
 
 
 admin.site.register(Genre)
+admin.site.register(User)
 
 
 class FilmSeriesInline(admin.TabularInline):

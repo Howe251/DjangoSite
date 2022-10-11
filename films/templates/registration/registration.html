@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block css %} <link href="{% static 'registration/css/login.css' %}" rel="stylesheet" type="text/css" /> {% endblock %}
+{% block js %} <script type="text/javascript" src="{% static 'registration/js/reg.js' %}"></script> {% endblock %}
+{% block mults %}
+ <div class="login">
+   <div class="form">
+     <h1 class="comicText">Регистрация</h1>
+       <form action='' method='post'>
+         {% csrf_token %}
+         {{ form }}
+         <div class="hint hide">Пароль должен содержать как минимум 8 символов.<br>
+             Пароль не может состоять только из цифр.<br>Должна быть как минимум 1 заглавная буква и спецсимвол.
+         </div>
+         <div class="form-group">
+           <button type="submit">Зарегестрироваться</button>
+           <p class="message comicText">Уже есть аккаунт? <a href="{% url 'mult:login' %}">Войти</a></p>
+         </div>
+       </form>
+   </div>
+ </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load svg_load %}
+{% block css %}
+<link href="{% static 'registration/css/cabinet.css' %}" rel="stylesheet" type="text/css" />
+{% if night %}
+<link href="{% static 'registration/css/night/cabinet.css' %}" rel="stylesheet" type="text/css" />
+{% endif %}
+<link href="{% static 'mult/css/list.css' %}" rel="stylesheet" type="text/css" />
+{% if night %}
+<link href="{% static 'mult/css/night/list.css' %}" rel="stylesheet" type="text/css" />
+{% endif %}
+{% endblock %}
+{% block js %}<script type="text/javascript" src="{% static 'registration/js/cab.js' %}"></script>{% endblock %}
+{% block mults %}
+    <div class="cabinet text">
+        <li class="cab">
+            <ul class="cab_list info selected">Информация</ul>
+            <ul class="cab_list change">Изменить информацию</ul>
+            <ul class="cab_list liked">Ваши любимые</ul>
+        </li>
+        <div class="right_block">
+            <div class="r info active">
+                <img class="avatar" src="{{user.avatar.url}}">
+                <p class="text">{{user.username}}, добро пожаловать!!!</p>
+                <p class="text">email: {{user.email}}</p>
+            </div>
+            <div class="r change">
+<!--                <div class="form">-->
+                    <form id="contact_form" action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form.visible_fields %}
+                        <div class="blockfield">
+                            <div class="label">{{field.label}}</div>
+                            <div class="field">{{ field }}</div>
+                            {{ field.help_text }}
+                        </div>
+                    {% endfor %}
+                        <button type="submit">Сохранить</button>
+                    </form>
+<!--                </div>-->
+            </div>
+            <div class="r liked">
+                {% include_block "film/film_list.html" "films" %}
+            </div>
+        </div>
+        <a class="out" href="{% url 'mult:logout' %}">Выйти</a>
+    </div>
+
+{% endblock %}

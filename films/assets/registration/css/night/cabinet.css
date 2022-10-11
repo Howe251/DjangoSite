@@ -1,0 +1,29 @@
+.text {
+ color: white;
+}
+
+.cab_list {
+    background-color: #161617;
+}
+
+.cab_list:hover {
+    background-color: #353535;
+}
+
+.change input {
+    background: #9d9d9d;
+    color: #fff;
+}
+
+.selected {
+    background-color: #444 !important;
+}
+
+.out {
+    color: white;
+    background-color: #444;
+}
+
+.out:hover {
+    background-color: #8a8a8a;
+}
