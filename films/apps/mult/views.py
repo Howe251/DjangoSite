@@ -4,7 +4,7 @@ import requests
 from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse
 from django.template import RequestContext
-from .models import Mult, Series, Film, Subs, Audio
+from .models import Mult, Series, Film, Subs, Audio, User
 from django.core.paginator import Paginator
 from itertools import chain
 from django.core.files import File
@@ -12,10 +12,11 @@ from django.core.files.temp import NamedTemporaryFile
 from .forms import ListForm, UserLoginForm, UserRegisterForm, UserChangeInfo
 from django.views import View
 from django.contrib import auth, messages
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 # from django.contrib.auth.forms import UserCreationForm
 from urllib.parse import urlparse
-from .functions import get_time, mult_error, FileDelete, create_context_username_csrf, get_next_url
+from .functions import get_time, mult_error, FileDelete, create_context_username_csrf, get_next_url, handle_upload_file
 
 h = {
                 "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:91.0) Gecko/20100101 Firefox/91.0",
@@ -304,16 +305,52 @@ class CabinetView(LoginRequiredMixin, View):
     redirect_field_name = 'next'
 
     def get(self, request):
-        form = UserChangeInfo(request.POST)
+        form = UserChangeInfo(request.POST, request.FILES)
+        likedmults = Mult.objects.filter(likes=request.user.pk)
+        likedfilms = Film.objects.filter(likes=request.user.pk)
         return render(request, 'registration/cabinet.html', {'night': get_time(),
-                                                             'form': form})
+                                                             'form': form,
+                                                             'films_lt': list(chain(likedmults, likedfilms))})
 
     def post(self, request):
-        form = UserChangeInfo(request.POST)
+        form = UserChangeInfo(request.POST, request.FILES)
+        likedmults = Mult.objects.filter(likes=request.user.pk)
+        likedfilms = Film.objects.filter(likes=request.user.pk)
         if form.is_valid():
-            pass
+            user = request.user
+            if ('avatar' in form.changed_data and request.FILES) or 'deleteAvatar' in form.changed_data:
+                if form.cleaned_data['deleteAvatar']:
+                    user.avatar.delete(save=False)
+                    user.avatar = 'avatars/default_user.png'
+                    user.save()
+                else:
+                    user.avatar = request.FILES['avatar']
+                user.save()
+            if 'username' in form.changed_data:
+                # user = request.user
+                user.username = form.cleaned_data['username']
+                user.save()
+            if 'email' in form.changed_data:
+                # user = request.user
+                user.email = form.cleaned_data['email']
+                user.save()
+            if 'old_password' in form.changed_data:
+                if form.cleaned_data['new_password1'] != form.cleaned_data['new_password2']:
+                    messages.error(request, 'Пароли не совпадают')
+                elif form.cleaned_data['new_password1'] == form.cleaned_data['old_password']:
+                    messages.error(request, 'Нельзя использовать старый пароль')
+                elif not auth.authenticate(request, username=request.user.username, password=form.cleaned_data['old_password']):
+                    messages.error(request, 'Введите правильный пароль')
+                else:
+                    messages.success(request, 'Пароль успешно изменен')
+                    # user = request.user
+                    user.set_password(form.cleaned_data['new_password1'])
+                    user.save()
+                    auth.logout(request)
+                    return redirect('/')
         return render(request, 'registration/cabinet.html', {'night': get_time(),
-                                                             'form': form})
+                                                             'form': form,
+                                                             'films_lt': list(chain(likedmults, likedfilms))})
 
 
 def create_user(request):

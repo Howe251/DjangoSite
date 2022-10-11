@@ -22,22 +22,22 @@
         <a class="comicText txtCl" href="{% url 'mult:glavnaya' %}">Домашняя библиотека</a>
         <a class="comicText txtCl" href="{% url 'mult:mult' %}">Мультфильмы</a>
         <a class="comicText txtCl" href="{% url 'mult:film' %}">Фильмы</a>
-            <div class="search_box">
-                {% if request.user.is_authenticated %}
-                <a href="{% url 'mult:cabinet' %}">{% icon 'user' 'loginIcon' %}</a>
-                {% else %}
-                <a href="{% url 'mult:login' %}">{% icon 'login' 'loginIcon' %}</a>
-                {% endif %}
-                <!-- <form action="" method="POST">
-                    <input type="hidden" name="night" value="True">
-                    {% csrf_token %}
-                    <button type="submit"></button>
-                </form> -->
-                <form action="{% url 'mult:search' %}" method="get">
-                    <input name="q" type="text" placeholder="Поиск...">
-                    <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
-                </form>
-            </div>
+        <div class="search_box">
+            {% if request.user.is_authenticated %}
+            <a href="{% url 'mult:cabinet' %}">{% icon 'user' 'loginIcon' %}</a>
+            {% else %}
+            <a href="{% url 'mult:login' %}">{% icon 'login' 'loginIcon' %}</a>
+            {% endif %}
+            <!-- <form action="" method="POST">
+                <input type="hidden" name="night" value="True">
+                {% csrf_token %}
+                <button type="submit"></button>
+            </form> -->
+            <form action="{% url 'mult:search' %}" method="get">
+                <input name="q" type="text" placeholder="Поиск...">
+                <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+            </form>
+        </div>
     </header>
 
     {% block mults %}{% endblock mults %}
