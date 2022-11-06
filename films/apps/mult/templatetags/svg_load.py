@@ -63,7 +63,7 @@ class IncludeBlockNode(template.Node):
 
     def _get_node(self, template, context, name):
         if hasattr(template, 'template'):
-            for node in template.template:
+            for node in template.template.nodelist:
                 if isinstance(node, BlockNode) and node.name == name:
                     return node.render(Context(context))
                 elif isinstance(node, ExtendsNode):

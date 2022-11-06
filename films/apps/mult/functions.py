@@ -1,6 +1,7 @@
 from time import strftime
 import os
-from django.utils.http import is_safe_url, urlunquote
+from django.utils.http import url_has_allowed_host_and_scheme as is_safe_url
+import urllib
 from django.template.context_processors import csrf
 from .forms import UserLoginForm
 from django.core.files.temp import NamedTemporaryFile
@@ -16,7 +17,7 @@ def create_context_username_csrf(request):
 def get_next_url(request):
     nnext = request.GET.get('next')
     if nnext:
-        nnext = urlunquote(nnext)  # HTTP_REFERER may be encoded.
+        nnext = urllib.parse.unquote(nnext)  # HTTP_REFERER may be encoded.
     if not is_safe_url(url=nnext, allowed_hosts=request.get_host()):
         nnext = '/'
     return nnext
