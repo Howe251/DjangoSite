@@ -16,18 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
-from django.conf.urls import url
+# from django.conf.urls import url
 from django.conf.urls.static import static
-from mult.views import LoginView
 
 urlpatterns = [
-    path('admin/login', LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
-    # path('accounts/', include('django.contrib.auth.urls')),
-    #url(r'^admin/', include('admin_tools.urls')),
-    #url(r'^admin_tools/', include('admin_tools.urls')),
     path('', include('mult.urls')),
-    #path('mult/', include('mult.urls')),
 ]
 
 handler404 = "mult.views.page_not_found_view"

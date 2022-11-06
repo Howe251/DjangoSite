@@ -1,9 +1,10 @@
 from . import views
 from django.urls import include, path
-from .forms import UserLoginForm
+# from .views import LoginView
 
 app_name = 'mult'
 urlpatterns = [
+    path('admin/login', views.LoginView.as_view(), name='login'),
     path('', views.mainpage, name='glavnaya'),
     path('mults/', views.mult_list, name='mult'),
     path("search/", views.search, name='search'),
