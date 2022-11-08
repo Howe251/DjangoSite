@@ -6,8 +6,9 @@
       <excludeFolder url="file://$MODULE_DIR$/media/images/films" />
       <excludeFolder url="file://$MODULE_DIR$/media/images/mults" />
       <excludeFolder url="file://$MODULE_DIR$/films_venv" />
+      <excludeFolder url="file://$MODULE_DIR$/films_env" />
     </content>
-    <orderEntry type="jdk" jdkName="Python 3.7 (DjangoSite)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.11 (films)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

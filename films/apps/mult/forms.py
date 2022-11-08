@@ -99,22 +99,18 @@ class UserRegisterForm(UserCreationForm):
 
 
 class UserChangeInfo(forms.ModelForm):
-    username = UsernameField(label=False, widget=forms.TextInput(
-        attrs={'class': 'form-control', 'placeholder': 'Имя пользователя'}))
-    email = forms.EmailField(label=False, widget=forms.TextInput(
-        attrs={'type': 'email',
-               'placeholder': 'E-mail'}))
+    avatar = forms.ImageField(required=False, label='Аватар')
+    deleteAvatar = forms.BooleanField(required=False, label="Удалить аватар")
+    username = UsernameField(required=False, label='Имя пользователя', widget=forms.TextInput())
+    email = forms.EmailField(required=False, label='E-mail', widget=forms.TextInput(
+        attrs={'type': 'email'}))
+    old_password = forms.CharField(required=False, label='Старый пароль', widget=forms.PasswordInput(),
+        error_messages={'required': 'Пароль не может быть пустым'})
+    new_password1 = forms.CharField(required=False, label='Новый пароль', widget=forms.PasswordInput(),
+        error_messages={'required': 'Пароль не может быть пустым'})
+    new_password2 = forms.CharField(required=False, label="Новый пароль (Повторить)", widget=forms.PasswordInput(),
+        error_messages={'required': 'Пароль не может быть пустым'})
+
     class Meta:
         model = get_user_model()
-        fields = ('username', 'email',)
-
-# class UserChangeInfo(UserChangeForm):
-#     username = UsernameField(label=False, widget=forms.TextInput(
-#         attrs={'class': 'form-control', 'placeholder': 'Имя пользователя', 'id': 'hello'}))
-#     email = forms.EmailField(label=False, widget=forms.TextInput(
-#         attrs={'type': 'email',
-#                'placeholder': 'E-mail'}))
-#     # avatar = forms.ImageField(label=False)
-#     class Meta:
-#         model = get_user_model()
-#         fields = ('username', 'email', 'avatar')
+        fields = ('username', 'email', 'avatar', 'deleteAvatar', 'old_password', 'new_password1', 'new_password2')

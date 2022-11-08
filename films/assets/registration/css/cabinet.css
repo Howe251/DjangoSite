@@ -1,0 +1,111 @@
+.r {
+    display: none;
+    background-color: #00000026;
+    border-radius: 20px;
+    margin: 0 10px 0 0;
+    padding: 10px;
+}
+
+.cab {
+    width: 15vw;
+    list-style: none;
+    margin-right: 15px;
+}
+
+.selected {
+    background-color: #c7c9e3 !important;
+}
+
+.cabinet {
+    display: flex !important;
+    padding: 25px;
+}
+
+.cab_list {
+    padding: 7px;
+    margin: 0;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.cab_list:hover {
+    background: #aeb7c2;
+}
+
+.right_block {
+    display: inline-block;
+    width: 100%;
+}
+
+.show {
+    display: block;
+}
+
+.active {
+    display: block;
+}
+
+.avatar {
+    border-radius: 100%;
+    width: 4vw;
+    height: 4vw;
+}
+
+.out {
+    text-decoration: none;
+    color: black;
+    background-color: white;
+    height: 100%;
+    padding: 7px;
+}
+
+.out:hover {
+    background-color: #2c89c6;
+}
+
+.change input {
+    outline: 0;
+    background: #eee5e5;
+    width: 100%;
+    border: 0;
+    padding: 15px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #000;
+}
+
+.change button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #848484;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #000;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+
+.blockfield {
+  line-height: 16px;
+  height: 62px;
+  margin-left: 30px;
+}
+
+.field {
+  display: inline-block;
+}
+
+.change form {
+  display: grid;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.label {
+  width: 15em;
+  display: inline-block;
+}
